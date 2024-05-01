@@ -1,49 +1,103 @@
 package ee.note_parnu.climate_monitoring_system.xml.domain;
 
 public class Reading {
-    private int sensor_ID;
-    private int device_code;
-    private double temperature;
-    private double humidity;
-    private String tempUnit;
+    private String passKey;
+    private String device;
+    private String temp;
+    private String relHum;
+    private String compQuant;
+    private String pressure;
+    private String alarms;
+    private String compType;
+    private String tempU;
+    private String pressureU;
+    private String timer;
 
-    public void setSensor_ID(int sensor_ID) {
-        this.sensor_ID = sensor_ID;
+    public String getPressure() {
+        return pressure;
     }
 
-    public void setDevice_code(int device_code) {
-        this.device_code = device_code;
+    public void setPressure(String pressure) {
+        this.pressure = pressure;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
+    public String getAlarms() {
+        return alarms;
     }
 
-    public void setHumidity(double humidity) {
-        this.humidity = humidity;
+    public void setAlarms(String alarms) {
+        this.alarms = alarms;
     }
 
-    public void setTempUnit(String tempUnit) {
-        this.tempUnit = tempUnit;
+    public String getCompType() {
+        return compType;
     }
 
-    public int getSensor_ID() {
-        return sensor_ID;
+    public void setCompType(String compType) {
+        this.compType = compType;
     }
 
-    public int getDevice_code() {
-        return device_code;
+    public String getTempU() {
+        return tempU;
     }
 
-    public double getTemperature() {
-        return temperature;
+    public void setTempU(String tempU) {
+        this.tempU = tempU;
     }
 
-    public double getHumidity() {
-        return humidity;
+    public String getPressureU() {
+        return pressureU;
     }
 
-    public String getTempUnit() {
-        return tempUnit;
+    public void setPressureU(String pressureU) {
+        this.pressureU = pressureU;
+    }
+
+    public String getTimer() {
+        return timer;
+    }
+
+    public void setTimer(String timer) {
+        this.timer = timer;
+    }
+
+    public void setPassKey(String passKey) {
+        this.passKey = passKey;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
+
+    public void setRelHum(String relHum) {
+        this.relHum = relHum;
+    }
+
+    public void setCompQuant(String compQuant) {
+        this.compQuant = compQuant;
+    }
+
+    public String getPassKey() {
+        return passKey;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public String getTemp() {
+        return temp;
+    }
+
+    public String getRelHum() {
+        return relHum;
+    }
+
+    public String getCompQuant() {
+        return compQuant;
     }
 }

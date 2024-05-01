@@ -10,7 +10,7 @@ public class ReadingsData {
         return this.readingList;
     }
 
-    public void addReading(Reading reading) {
-        this.readingList.add(reading);
+    public void setReadingList(List<Reading> readingList) {
+        this.readingList = readingList;
     }
 }

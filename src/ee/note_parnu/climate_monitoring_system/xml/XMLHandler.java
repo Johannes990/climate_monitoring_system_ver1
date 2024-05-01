@@ -1,9 +1,12 @@
 package ee.note_parnu.climate_monitoring_system.xml;
 
+import ee.note_parnu.climate_monitoring_system.xml.domain.Reading;
 import ee.note_parnu.climate_monitoring_system.xml.domain.ReadingsData;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.ArrayList;
 
 public class XMLHandler extends DefaultHandler {
     private static final String SENSOR_SAMPLE = "InsertTx5xxSample";
@@ -39,15 +42,32 @@ public class XMLHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
         switch (qName) {
-
+            case SENSOR_SAMPLE:
+                readingsData.setReadingList(new ArrayList<>());
+                break;
+            case PASS_KEY, DEVICE, TEMP, REL_HUM, COMP_QUANT, PRESSURE, ALARMS, COMP_TYPE, TEMP_U, PRESSURE_U, TIMER:
+                elementValue = new StringBuilder();
+                break;
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
-
+            case PASS_KEY:
+                getNthReading(0).setPassKey(elementValue.toString());
+                break;
+            case DEVICE:
+                getNthReading(0).setDevice(elementValue.toString());
+                break;
+            case TEMP:
+                getNthReading(0).setTemp(elementValue.toString());
+                break;
         }
+    }
+
+    private Reading getNthReading(int n) {
+        return readingsData.getReadingList().get(n);
     }
 
 }
