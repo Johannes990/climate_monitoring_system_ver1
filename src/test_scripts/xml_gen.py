@@ -3,12 +3,10 @@ import random
 
 
 def generate_random_xml(device_id: str, device_type: str):
-    envelope = ElementTree.Element("soap:Envelope",
-                                   attrib={
+    envelope = ElementTree.Element("soap:Envelope",attrib={
                                     "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
                                     "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-                                    "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
-                                 }
+                                    "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"}
                                    )
 
     body = ElementTree.SubElement(envelope, "soap:Body")
