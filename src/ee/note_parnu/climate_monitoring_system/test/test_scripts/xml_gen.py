@@ -28,17 +28,17 @@ def generate_random_xml(device_id: str, device_type: str):
     pressure_u = "n/a"
     timer = "10"
 
-    ElementTree.SubElement(insert_sample, "passKey").text = pass_key
-    ElementTree.SubElement(insert_sample, "device").text = device
+    ElementTree.SubElement(insert_sample, "passKey").text = str(pass_key)
+    ElementTree.SubElement(insert_sample, "device").text = str(device)
     ElementTree.SubElement(insert_sample, "temp").text = str(temp)
     ElementTree.SubElement(insert_sample, "relHum").text = str(rel_hum)
     ElementTree.SubElement(insert_sample, "compQuant").text = str(comp_quant)
     ElementTree.SubElement(insert_sample, "pressure").text = str(pressure)
-    ElementTree.SubElement(insert_sample, "alarms").text = alarms
-    ElementTree.SubElement(insert_sample, "compType").text = comp_type
-    ElementTree.SubElement(insert_sample, "tempU").text = temp_u
-    ElementTree.SubElement(insert_sample, "pressureU").text = pressure_u
-    ElementTree.SubElement(insert_sample, "timer").text = timer
+    ElementTree.SubElement(insert_sample, "alarms").text = str(alarms)
+    ElementTree.SubElement(insert_sample, "compType").text = str(comp_type)
+    ElementTree.SubElement(insert_sample, "tempU").text = str(temp_u)
+    ElementTree.SubElement(insert_sample, "pressureU").text = str(pressure_u)
+    ElementTree.SubElement(insert_sample, "timer").text = str(timer)
 
     tree = ElementTree.ElementTree(envelope)
     return tree
