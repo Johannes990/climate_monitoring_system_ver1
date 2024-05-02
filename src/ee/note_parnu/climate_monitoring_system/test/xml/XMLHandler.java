@@ -1,7 +1,7 @@
-package ee.note_parnu.climate_monitoring_system.xml;
+package ee.note_parnu.climate_monitoring_system.test.xml;
 
-import ee.note_parnu.climate_monitoring_system.xml.domain.Reading;
-import ee.note_parnu.climate_monitoring_system.xml.domain.ReadingsData;
+import ee.note_parnu.climate_monitoring_system.test.xml.domain.Reading;
+import ee.note_parnu.climate_monitoring_system.test.xml.domain.ReadingsData;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -25,6 +25,7 @@ public class XMLHandler extends DefaultHandler {
 
     private ReadingsData readingsData;
     private StringBuilder elementValue;
+    private Reading currentReading;
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
@@ -38,15 +39,17 @@ public class XMLHandler extends DefaultHandler {
     @Override
     public void startDocument() throws SAXException {
         readingsData = new ReadingsData();
+        readingsData.setReadingList(new ArrayList<>());
     }
 
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
+        System.out.println("starting to read file from :");
         switch (qName) {
             case SENSOR_SAMPLE:
-                readingsData.setReadingList(new ArrayList<>());
+                currentReading = new Reading();
                 break;
-            case PASS_KEY, DEVICE, TEMP, REL_HUM, COMP_QUANT, PRESSURE, ALARMS, COMP_TYPE, TEMP_U, PRESSURE_U, TIMER:
+            default:
                 elementValue = new StringBuilder();
                 break;
         }
@@ -55,44 +58,42 @@ public class XMLHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
+            case SENSOR_SAMPLE:
+                readingsData.getReadingList().add(currentReading);
             case PASS_KEY:
-                getNthReading(0).setPassKey(elementValue.toString());
+                currentReading.setPassKey(elementValue.toString());
                 break;
             case DEVICE:
-                getNthReading(0).setDevice(elementValue.toString());
+                currentReading.setDevice(elementValue.toString());
                 break;
             case TEMP:
-                getNthReading(0).setTemp(elementValue.toString());
+                currentReading.setTemp(elementValue.toString());
                 break;
             case REL_HUM:
-                getNthReading(0).setRelHum(elementValue.toString());
+                currentReading.setRelHum(elementValue.toString());
                 break;
             case COMP_QUANT:
-                getNthReading(0).setCompQuant(elementValue.toString());
+                currentReading.setCompQuant(elementValue.toString());
                 break;
             case PRESSURE:
-                getNthReading(0).setPressure(elementValue.toString());
+                currentReading.setPressure(elementValue.toString());
                 break;
             case ALARMS:
-                getNthReading(0).setAlarms(elementValue.toString());
+                currentReading.setAlarms(elementValue.toString());
                 break;
             case COMP_TYPE:
-                getNthReading(0).setCompType(elementValue.toString());
+                currentReading.setCompType(elementValue.toString());
                 break;
             case TEMP_U:
-                getNthReading(0).setTempU(elementValue.toString());
+                currentReading.setTempU(elementValue.toString());
                 break;
             case PRESSURE_U:
-                getNthReading(0).setPressureU(elementValue.toString());
+                currentReading.setPressureU(elementValue.toString());
                 break;
             case TIMER:
-                getNthReading(0).setTimer(elementValue.toString());
+                currentReading.setTimer(elementValue.toString());
                 break;
         }
-    }
-
-    private Reading getNthReading(int n) {
-        return readingsData.getReadingList().get(n);
     }
 
     public ReadingsData getReadings() {

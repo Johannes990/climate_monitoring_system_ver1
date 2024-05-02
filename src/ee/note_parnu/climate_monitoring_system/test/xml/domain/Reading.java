@@ -1,4 +1,4 @@
-package ee.note_parnu.climate_monitoring_system.xml.domain;
+package ee.note_parnu.climate_monitoring_system.test.xml.domain;
 
 public class Reading {
     private String passKey;
