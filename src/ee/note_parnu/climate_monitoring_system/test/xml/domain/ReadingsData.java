@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadingsData {
+    public ReadingsData() {
+        this.readingList = new ArrayList<>();
+    }
     private List<Reading> readingList;
 
     public List<Reading> getReadingList() {

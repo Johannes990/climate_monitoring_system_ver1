@@ -7,11 +7,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class XMLHandler extends DefaultHandler {
     private static final String SENSOR_SAMPLE = "InsertTx5xxSample";
-    private static final String PASS_KEY = "PassKey";
+    private static final String PASS_KEY = "passKey";
     private static final String DEVICE = "device";
     private static final String TEMP = "temp";
     private static final String REL_HUM = "relHum";
@@ -44,7 +43,6 @@ public class XMLHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
-        System.out.println("starting to read file from :");
         switch (qName) {
             case SENSOR_SAMPLE:
                 currentReading = new Reading();
@@ -60,6 +58,7 @@ public class XMLHandler extends DefaultHandler {
         switch (qName) {
             case SENSOR_SAMPLE:
                 readingsData.getReadingList().add(currentReading);
+                break;
             case PASS_KEY:
                 currentReading.setPassKey(elementValue.toString());
                 break;
@@ -92,6 +91,8 @@ public class XMLHandler extends DefaultHandler {
                 break;
             case TIMER:
                 currentReading.setTimer(elementValue.toString());
+                break;
+            default:
                 break;
         }
     }

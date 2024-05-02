@@ -82,22 +82,22 @@ public class Reading {
     }
 
     public String getPassKey() {
-        return passKey;
+        return this.passKey;
     }
 
     public String getDevice() {
-        return device;
+        return this.device;
     }
 
     public String getTemp() {
-        return temp;
+        return this.temp;
     }
 
     public String getRelHum() {
-        return relHum;
+        return this.relHum;
     }
 
     public String getCompQuant() {
-        return compQuant;
+        return this.compQuant;
     }
 }
