@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class XMLHandler extends DefaultHandler {
     private static final String SENSOR_SAMPLE = "InsertTx5xxSample";
@@ -63,11 +64,39 @@ public class XMLHandler extends DefaultHandler {
             case TEMP:
                 getNthReading(0).setTemp(elementValue.toString());
                 break;
+            case REL_HUM:
+                getNthReading(0).setRelHum(elementValue.toString());
+                break;
+            case COMP_QUANT:
+                getNthReading(0).setCompQuant(elementValue.toString());
+                break;
+            case PRESSURE:
+                getNthReading(0).setPressure(elementValue.toString());
+                break;
+            case ALARMS:
+                getNthReading(0).setAlarms(elementValue.toString());
+                break;
+            case COMP_TYPE:
+                getNthReading(0).setCompType(elementValue.toString());
+                break;
+            case TEMP_U:
+                getNthReading(0).setTempU(elementValue.toString());
+                break;
+            case PRESSURE_U:
+                getNthReading(0).setPressureU(elementValue.toString());
+                break;
+            case TIMER:
+                getNthReading(0).setTimer(elementValue.toString());
+                break;
         }
     }
 
     private Reading getNthReading(int n) {
         return readingsData.getReadingList().get(n);
+    }
+
+    public ReadingsData getReadings() {
+        return this.readingsData;
     }
 
 }
