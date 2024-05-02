@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group = 'ee.note_parnu'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11'
+}
