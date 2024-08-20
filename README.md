@@ -10,7 +10,3 @@ A system that monitors and logs climate data from sensor output and gives warnin
 4. run CreateSchemaUserAuth.sql command
 5. run CreateTablesClimateInfo.sql commands
 6. run CreateTablesUserAuth.sql commands
-
-## gitignore
-database/data/climate_system_data.mdf
-database/log/climate_system_database_log.ldf

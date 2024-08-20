@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### database files ###
+database/data/climate_system_data.mdf
+database/log/climate_system_database_log.ldf
