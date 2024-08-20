@@ -41,4 +41,5 @@ database/data/climate_system_data.mdf
 database/log/climate_system_database_log.ldf
 
 ### Sensitive info like passwords, usernames, database URL-s ###
-src/main/resources/application.properties
+src/main/resources/config/
+/system_variables.txt
