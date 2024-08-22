@@ -1,4 +1,4 @@
-package com.climate_monitoring_system.domain;
+package com.climate_monitoring_system.domain.userauth;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
