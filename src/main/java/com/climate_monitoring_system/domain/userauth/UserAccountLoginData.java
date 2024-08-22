@@ -31,5 +31,5 @@ public class UserAccountLoginData {
 
     @JoinColumn(name = "HashAlgorithmID")
     @ManyToOne
-    private HashAlgorithm hashAlgorithmID;
+    private HashAlgorithm hashAlgorithm;
 }

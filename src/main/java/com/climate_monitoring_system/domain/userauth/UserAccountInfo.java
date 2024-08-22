@@ -36,5 +36,5 @@ public class UserAccountInfo {
 
     @JoinColumn(name = "RoleID")
     @OneToOne
-    private Role role;
+    private UserRole role;
 }
