@@ -9,13 +9,16 @@ import lombok.Setter;
 @Setter
 @Table(name = "RolePermissionMap", schema = "userauth")
 public class RolePermissionMap {
-    @Id
+    @EmbeddedId
+    private RolePermissionId id;
+
+    @MapsId("roleId")
     @JoinColumn(name = "RoleID")
     @ManyToOne
-    private int roleId;
+    private UserRole role;
 
-    @Id
+    @MapsId("permissionId")
     @JoinColumn(name = "PermissionID")
     @ManyToOne
-    private int permissionId;
+    private Permission permission;
 }
