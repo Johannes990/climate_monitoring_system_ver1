@@ -15,12 +15,17 @@ Assuming here that server connection is up and running with MS SQL...
 
 ## Setting up spring boot
 
-Currently spring.datasource and spring.security credentials are set to be read from system or user environment variables. Find a way to set these variables for you specific OS.
+~~Currently spring.datasource and spring.security credentials are set to be read from system or user environment variables. Find a way to set these variables for you specific OS.~~
 
-1. create DB_URL variable and set the value to be your specific server connection url
-2. create DB_USERNAME variable and set the value to be the SQL Server Authentication user name
-3. create DB_PASSWORD variable and set the value to be the SQL Server Authentication password for that user
-4. create SECURITY_USERNAME variable and set the value to be whatever username you will enter for the Spring-security login screen
-5. create SECURITY_PASSWORD variable and set the value to be the password you want to enter on Spring-secutiry login screen
+~~1. create DB_URL variable and set the value to be your specific server connection url~~
+~~2. create DB_USERNAME variable and set the value to be the SQL Server Authentication user name~~
+~~3. create DB_PASSWORD variable and set the value to be the SQL Server Authentication password for that user~~
+~~4. create SECURITY_USERNAME variable and set the value to be whatever username you will enter for the Spring-security login screen~~
+~~5. create SECURITY_PASSWORD variable and set the value to be the password you want to enter on Spring-secutiry login screen~~
+1. create application-db.properties file in <clone_folder>/src/main/resources/
+2. set spring.datasource.url to the database connection url
+3. set spring.datasource.username to database connection username
+4. set spring.datasource.password to database connection password
+5. set spring.security.user.name and spring.security.user.pass both to be the credentials you want to enter on spring boot splash screen
 
 This should be sufficient to get app up and running and logged in
