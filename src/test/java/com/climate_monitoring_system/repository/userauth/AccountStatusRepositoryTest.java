@@ -54,8 +54,9 @@ public class AccountStatusRepositoryTest {
         saveAccountStatus(accountStatusEntityGen());
 
         long count = accountStatusRepository.count();
-        assertThat(count).isEqualTo(1);
         assertThat(count).isNotEqualTo(2);
+        assertThat(count).isEqualTo(1);
+
     }
 
     @Test
