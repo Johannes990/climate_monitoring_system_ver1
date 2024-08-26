@@ -18,13 +18,18 @@ repositories {
 }
 
 dependencies {
-	annotationProcessor 'org.projectlombok:lombok'
+
 	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'org.liquibase:liquibase-core'
+	implementation 'com.microsoft.sqlserver:mssql-jdbc'
+	implementation 'org.mapstruct:mapstruct:1.6.0'
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -34,8 +39,6 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter") {
 		because 'allows to write and run Jupiter tests'
 	}
-	// In-memory DB testing
-	testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
