@@ -28,11 +28,6 @@ create table test_company (
 --rollback ALTER TABLE person DROP COLUMN country;
 
 --changeset your.name:4
-DROP TABLE name_table;
 DROP TABLE test_company;
 DROP TABLE test_person;
-
---changeset your.name:5
-DROP TABLE person;
-DROP TABLE company;
 
