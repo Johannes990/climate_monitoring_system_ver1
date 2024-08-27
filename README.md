@@ -4,7 +4,7 @@ gives warnings when environment variables are outside allowable limits
 
 
 ## Docker database creation (assuming docker desktop has been installed)
-1. Add 'com.microsoft.sqlserver:mssql-jdbc' to build.gradle dependencies under 
+1. Add ```com.microsoft.sqlserver:mssql-jdbc``` to build.gradle dependencies under 
 ```implementation``` and ```runtimeonly```.
 2. Create compose.yaml in project root.
 3. Copy this to compose.yaml:
