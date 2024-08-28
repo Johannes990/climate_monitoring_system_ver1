@@ -114,7 +114,8 @@ This should be sufficient to get app up and running and logged in.
 
 
 ### Points about database management:
-  - schema, table and field names all pascalCase: ```myCoolSchema.myCoolTable```
+  - schema names lowercase
+  - table and field names all pascalCase: ```mycoolschema.myCoolTable```
   - primary key constraint naming: ```PK_<tableName>_<fieldName>```.
   For example:
    ```sql
