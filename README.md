@@ -142,7 +142,7 @@ This should be sufficient to get app up and running and logged in.
       );
    ```
   - changeset identification:
-    - name part: firstNameLastNameYYYY-MM-DD ```--changeset JohnDoe20240828```
+    - name part: firstNameLastNameYYYYMMDD ```--changeset JohnDoe20240828```
     - id part: unique within file, not unique across files. Reason being not wanting to deal
 with keeping track of id-s across several files which would be a mess. Tracking by file is sufficient
 as long as file names are also unique.
