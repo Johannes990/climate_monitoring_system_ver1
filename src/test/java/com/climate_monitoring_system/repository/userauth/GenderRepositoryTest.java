@@ -5,13 +5,16 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class GenderRepositoryTest {
 
     @BeforeEach
@@ -49,7 +52,6 @@ public class GenderRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testGenderRepositorySave() {
         saveGender(genderEntityGen(mGender));
 
@@ -58,7 +60,6 @@ public class GenderRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testGenderRepositorySaveIsTransactional() {
         long countBeforeSave = genderRepository.count();
 
@@ -71,7 +72,6 @@ public class GenderRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testGenderRepositoryDelete() {
         Gender savedGender = saveGender(genderEntityGen(fGender));
         genderRepository.delete(savedGender);
@@ -81,7 +81,6 @@ public class GenderRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testGenderRepositoryDeleteIsTransactional() {
         Gender savedGenderFemale = saveGender(genderEntityGen(fGender));
         Gender savedGenderMale = saveGender(genderEntityGen(mGender));
@@ -94,7 +93,6 @@ public class GenderRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testGenderRepositoryEntityValuesCorrect() {
         Gender savedGenderMale = saveGender(genderEntityGen(mGender));
         Gender savedGenderFemale = saveGender(genderEntityGen(fGender));

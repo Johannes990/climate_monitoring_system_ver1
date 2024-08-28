@@ -4,16 +4,24 @@ import com.climate_monitoring_system.domain.userauth.HashAlgorithm;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class HashAlgorithmRepositoryTest {
     @Autowired
     private HashAlgorithmRepository hashAlgorithmRepository;
+
+    @Autowired
+    TestEntityManager entityManager;
+
     private final String hashAlgorithmName = "MD5";
 
     public HashAlgorithm hashAlgorithmEntityGen() {
@@ -25,12 +33,19 @@ public class HashAlgorithmRepositoryTest {
     }
 
     @Test
+    public void testSaveRepositorySuccess() {
+        HashAlgorithm hashAlgorithm = new HashAlgorithm();
+        hashAlgorithm.setHashAlgorithmName("Super special algorithm");
+        HashAlgorithm savedAlgorithm = hashAlgorithmRepository.save(hashAlgorithm);
+        assertThat(entityManager.find(HashAlgorithm.class, savedAlgorithm.getHashAlgorithmId())).isEqualTo(hashAlgorithm);
+    }
+
+    @Test
     public void testHashAlgorithmRepositoryNotNull() {
         assertThat(hashAlgorithmRepository).isNotNull();
     }
 
     @Test
-    @Transactional
     public void testHashAlgorithmRepository() {
         HashAlgorithm hashAlgorithm = hashAlgorithmEntityGen();
 

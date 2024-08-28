@@ -4,11 +4,14 @@ import com.climate_monitoring_system.domain.userauth.AccountStatus;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountStatusRepositoryTest {
     @Autowired
     private AccountStatusRepository accountStatusRepository;
@@ -40,7 +43,6 @@ public class AccountStatusRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testAccountStatusRepositorySave() {
         saveAccountStatus(accountStatusEntityGen());
 
@@ -49,7 +51,6 @@ public class AccountStatusRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testAccountStatusRepositorySaveIsTransactional() {
         saveAccountStatus(accountStatusEntityGen());
 
@@ -60,7 +61,6 @@ public class AccountStatusRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testAccountStatusRepositoryDelete() {
         AccountStatus accountStatus = saveAccountStatus(accountStatusEntityGen());
         accountStatusRepository.delete(accountStatus);
@@ -70,7 +70,6 @@ public class AccountStatusRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void testAccountStatusRepositoryEntityValuesCorrect() {
         AccountStatus savedStatus = saveAccountStatus(accountStatusEntityGen());
 
