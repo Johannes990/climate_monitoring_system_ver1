@@ -5,5 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
+    <!--file includes must follow a particular order-->
+    <!--in particular, tables referred to by foreign keys must exist before key creation-->
     <include file="db/changelog/climatedata/schema/01_create_schema_climatedata.sql"/>
 </databaseChangeLog>
