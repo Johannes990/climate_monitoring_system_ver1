@@ -15,4 +15,5 @@
     <include file="db/changelog/userauth/tables/06_create_table_Gender.sql"/>
     <include file="db/changelog/userauth/tables/07_create_table_AccountStatus.sql"/>
     <include file="db/changelog/userauth/tables/08_create_table_UserAccountInfo.sql"/>
+    <include file="db/changelog/userauth/tables/09_create_table_UserAccountLoginData.sql"/>
 </databaseChangeLog>
