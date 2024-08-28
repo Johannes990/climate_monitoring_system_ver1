@@ -23,10 +23,8 @@ public class AccountStatusRepositoryTest {
 
     public AccountStatus accountStatusEntityGen(String statusName, String statusDescription) {
         AccountStatus accountStatus = new AccountStatus();
-
         accountStatus.setStatusName(statusName);
         accountStatus.setStatusDescription(statusDescription);
-
         return accountStatus;
     }
 

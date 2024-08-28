@@ -22,9 +22,7 @@ public class HashAlgorithmRepositoryTest {
 
     private HashAlgorithm hashAlgorithmEntityGen(String algorithmName) {
         HashAlgorithm hashAlgorithm = new HashAlgorithm();
-
         hashAlgorithm.setHashAlgorithmName(algorithmName);
-
         return hashAlgorithm;
     }
 
