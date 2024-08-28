@@ -39,6 +39,8 @@ out/
 ### database files ###
 resources/data/climate_system_data.mdf
 resources/log/climate_system_database_log.ldf
+data/
+log/
 
 ### Sensitive info like passwords, usernames, database URL-s ###
 src/main/resources/application-db.properties
