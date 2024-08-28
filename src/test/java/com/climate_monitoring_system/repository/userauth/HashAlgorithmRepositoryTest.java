@@ -20,8 +20,6 @@ public class HashAlgorithmRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
 
-    private final String hashAlgorithmName = "MD5";
-
     private HashAlgorithm hashAlgorithmEntityGen(String algorithmName) {
         HashAlgorithm hashAlgorithm = new HashAlgorithm();
 
