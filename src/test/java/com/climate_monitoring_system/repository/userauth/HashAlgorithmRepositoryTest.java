@@ -24,7 +24,7 @@ public class HashAlgorithmRepositoryTest {
     }
 
     @Test
-    public void testHashAlgortihmRepositoryNotNull() {
+    public void testHashAlgorithmRepositoryNotNull() {
         assertThat(hashAlgorithmRepository).isNotNull();
     }
 
@@ -38,7 +38,7 @@ public class HashAlgorithmRepositoryTest {
         HashAlgorithm savedHashAlgorithm = hashAlgorithmRepository.save(hashAlgorithm);
 
         long countAfter = hashAlgorithmRepository.count();
-        assertThat(countAfter).isEqualTo(0);
+        assertThat(countAfter).isEqualTo(1);
 
         Optional<HashAlgorithm> hashAlgorithmOptional = hashAlgorithmRepository
                 .findById(savedHashAlgorithm.getHashAlgorithmId());
