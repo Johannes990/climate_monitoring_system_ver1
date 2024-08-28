@@ -27,9 +27,7 @@ public class GenderRepositoryTest {
 
     public Gender genderEntityGen(String genderStr) {
         Gender gender = new Gender();
-
         gender.setGenderName(genderStr);
-
         return gender;
     }
 
