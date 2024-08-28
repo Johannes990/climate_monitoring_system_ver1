@@ -54,7 +54,7 @@ public class HashAlgorithmRepositoryTest {
         HashAlgorithm createdAlgorithm = hashAlgorithmEntityGen(algorithmName);
         entityManager.persist(createdAlgorithm);
         createdAlgorithm.setHashAlgorithmName(newAlgorithmName);
-        hashAlgorithmRepository.save(createdAlgorithm);
+        saveHashAlgorithmEntity(createdAlgorithm);
         assertThat(entityManager.find(HashAlgorithm.class, createdAlgorithm.getHashAlgorithmId())
                 .getHashAlgorithmName()).isEqualTo(newAlgorithmName);
     }

@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,14 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AccountStatusRepositoryTest {
     @Autowired
     private AccountStatusRepository accountStatusRepository;
-    final String statusName = "status 1";
-    final String statusDesc = "testing status numero uno";
+    @Autowired
+    private TestEntityManager entityManager;
+    final String accountStatusName = "operational";
+    final String accountStatusDescription = "account is active, no issues";
 
-    public AccountStatus accountStatusEntityGen() {
+    public AccountStatus accountStatusEntityGen(String statusName, String statusDescription) {
         AccountStatus accountStatus = new AccountStatus();
 
         accountStatus.setStatusName(statusName);
-        accountStatus.setStatusDescription(statusDesc);
+        accountStatus.setStatusDescription(statusDescription);
 
         return accountStatus;
     }
@@ -31,49 +36,60 @@ public class AccountStatusRepositoryTest {
 
     @Test
     public void testAccountStatusRepositoryNotNull() {
-        assertThat(accountStatusRepository).isNotNull();
+        assertThat(accountStatusRepository)
+                .isNotNull();
     }
 
     @Test
-    public void testAccountStatusRepositoryEmpty() {
-        long count = accountStatusRepository.count();
-        assertThat(count).isEqualTo(0);
+    public void testAccountStatusRepositorySaveSuccess() {
+        AccountStatus createdAccountStatus = accountStatusEntityGen(
+                accountStatusName,
+                accountStatusDescription
+        );
+        AccountStatus savedAccountStatus = saveAccountStatus(createdAccountStatus);
+        assertThat(entityManager.find(AccountStatus.class, savedAccountStatus.getStatusId()))
+                .isEqualTo(createdAccountStatus);
     }
 
     @Test
-    public void testAccountStatusRepositorySave() {
-        saveAccountStatus(accountStatusEntityGen());
-
-        long count = accountStatusRepository.count();
-        assertThat(count).isEqualTo(1);
+    public void testAccountStatusRepositoryUpdateSuccess() {
+        final String newStatusName = "limitation #1";
+        final String newStatusDescription = "account usable only in view-mode";
+        AccountStatus accountStatus = accountStatusEntityGen(
+                accountStatusName,
+                accountStatusDescription
+        );
+        entityManager.persist(accountStatus);
+        accountStatus.setStatusName(newStatusName);
+        accountStatus.setStatusDescription(newStatusDescription);
+        saveAccountStatus(accountStatus);
+        assertThat(entityManager.find(AccountStatus.class, accountStatus.getStatusId())
+                .getStatusName()).isEqualTo(newStatusName);
+        assertThat(entityManager.find(AccountStatus.class, accountStatus.getStatusId())
+                .getStatusDescription()).isEqualTo(newStatusDescription);
     }
 
     @Test
-    public void testAccountStatusRepositorySaveIsTransactional() {
-        saveAccountStatus(accountStatusEntityGen());
-
-        long count = accountStatusRepository.count();
-        assertThat(count).isNotEqualTo(2);
-        assertThat(count).isEqualTo(1);
-
+    public void testAccountStatusRepositoryFindByIdSuccess() {
+        AccountStatus accountStatus = accountStatusEntityGen(
+                accountStatusName,
+                accountStatusDescription
+        );
+        entityManager.persist(accountStatus);
+        Optional<AccountStatus> foundAccountStatus = accountStatusRepository
+                .findById(accountStatus.getStatusId());
+        assertThat(foundAccountStatus).contains(accountStatus);
     }
 
     @Test
-    public void testAccountStatusRepositoryDelete() {
-        AccountStatus accountStatus = saveAccountStatus(accountStatusEntityGen());
+    public void testAccountStatusRepositoryDeleteSuccess() {
+        AccountStatus accountStatus = accountStatusEntityGen(
+                accountStatusName,
+                accountStatusDescription
+        );
+        entityManager.persist(accountStatus);
         accountStatusRepository.delete(accountStatus);
-
-        long count = accountStatusRepository.count();
-        assertThat(count).isEqualTo(0);
-    }
-
-    @Test
-    public void testAccountStatusRepositoryEntityValuesCorrect() {
-        AccountStatus savedStatus = saveAccountStatus(accountStatusEntityGen());
-
-        AccountStatus foundStatus = accountStatusRepository.getReferenceById(savedStatus.getStatusId());
-
-        assertThat(foundStatus.getStatusName()).isEqualTo(statusName);
-        assertThat(foundStatus.getStatusDescription()).isEqualTo(statusDesc);
+        assertThat(entityManager.find(AccountStatus.class, accountStatus.getStatusId()))
+                .isNull();
     }
 }
