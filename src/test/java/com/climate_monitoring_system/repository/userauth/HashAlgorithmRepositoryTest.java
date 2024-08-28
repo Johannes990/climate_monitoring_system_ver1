@@ -22,46 +22,62 @@ public class HashAlgorithmRepositoryTest {
 
     private final String hashAlgorithmName = "MD5";
 
-    public HashAlgorithm hashAlgorithmEntityGen() {
+    private HashAlgorithm hashAlgorithmEntityGen(String algorithmName) {
         HashAlgorithm hashAlgorithm = new HashAlgorithm();
 
-        hashAlgorithm.setHashAlgorithmName(hashAlgorithmName);
+        hashAlgorithm.setHashAlgorithmName(algorithmName);
 
         return hashAlgorithm;
     }
 
-    @Test
-    public void testSaveRepositorySuccess() {
-        HashAlgorithm hashAlgorithm = new HashAlgorithm();
-        hashAlgorithm.setHashAlgorithmName("Super special algorithm");
-        HashAlgorithm savedAlgorithm = hashAlgorithmRepository.save(hashAlgorithm);
-        assertThat(entityManager.find(HashAlgorithm.class, savedAlgorithm.getHashAlgorithmId())).isEqualTo(hashAlgorithm);
+    private HashAlgorithm saveHashAlgorithmEntity(HashAlgorithm hashAlgorithm) {
+        return hashAlgorithmRepository.save(hashAlgorithm);
     }
 
     @Test
     public void testHashAlgorithmRepositoryNotNull() {
-        assertThat(hashAlgorithmRepository).isNotNull();
+        assertThat(hashAlgorithmRepository)
+                .isNotNull();
     }
 
     @Test
-    public void testHashAlgorithmRepository() {
-        HashAlgorithm hashAlgorithm = hashAlgorithmEntityGen();
+    public void testHashAlgorithmRepositorySaveSuccess() {
+        final String algorithmName = "Super special algorithm";
+        HashAlgorithm createdAlgorithm = hashAlgorithmEntityGen(algorithmName);
+        HashAlgorithm savedAlgorithm = saveHashAlgorithmEntity(createdAlgorithm);
+        assertThat(entityManager.find(HashAlgorithm.class, savedAlgorithm.getHashAlgorithmId()))
+                .isEqualTo(createdAlgorithm);
+    }
 
-        long countBefore = hashAlgorithmRepository.count();
-        assertThat(countBefore).isEqualTo(0);
+    @Test
+    public void testHashAlgorithmRepositoryUpdateSuccess() {
+        final String algorithmName = "Super special algorithm #2";
+        final String newAlgorithmName = "Super special algorithm #3";
+        HashAlgorithm createdAlgorithm = hashAlgorithmEntityGen(algorithmName);
+        entityManager.persist(createdAlgorithm);
+        createdAlgorithm.setHashAlgorithmName(newAlgorithmName);
+        hashAlgorithmRepository.save(createdAlgorithm);
+        assertThat(entityManager.find(HashAlgorithm.class, createdAlgorithm.getHashAlgorithmId())
+                .getHashAlgorithmName()).isEqualTo(newAlgorithmName);
+    }
 
-        HashAlgorithm savedHashAlgorithm = hashAlgorithmRepository.save(hashAlgorithm);
+    @Test
+    public void testHashAlgorithmRepositoryFindByIdSuccess() {
+        final String algorithmName = "SHA256";
+        HashAlgorithm createdAlgorithm = hashAlgorithmEntityGen(algorithmName);
+        entityManager.persist(createdAlgorithm);
+        Optional<HashAlgorithm> retrievedHashAlgorithm = hashAlgorithmRepository
+                .findById(createdAlgorithm.getHashAlgorithmId());
+        assertThat(retrievedHashAlgorithm).contains(createdAlgorithm);
+    }
 
-        long countAfter = hashAlgorithmRepository.count();
-        assertThat(countAfter).isEqualTo(1);
-
-        Optional<HashAlgorithm> hashAlgorithmOptional = hashAlgorithmRepository
-                .findById(savedHashAlgorithm.getHashAlgorithmId());
-
-        if (hashAlgorithmOptional.isPresent()) {
-            HashAlgorithm hashAlgorithmSaved = hashAlgorithmOptional.get();
-
-            assertThat(hashAlgorithmSaved.getHashAlgorithmName()).isEqualTo(hashAlgorithmName);
-        }
+    @Test
+    public void testHasAlgorithmRepositoryDeleteSuccess() {
+        final String algorithmName = "SHA256";
+        HashAlgorithm createdAlgorithm = hashAlgorithmEntityGen(algorithmName);
+        entityManager.persist(createdAlgorithm);
+        hashAlgorithmRepository.delete(createdAlgorithm);
+        assertThat(entityManager.find(HashAlgorithm.class, createdAlgorithm.getHashAlgorithmId()))
+                .isNull();
     }
 }
