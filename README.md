@@ -111,3 +111,38 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
 ```
 
 This should be sufficient to get app up and running and logged in.
+
+
+### Points about database management:
+  - schema, table and field names all pascalCase: ```myCoolSchema.myCoolTable```
+  - primary key constraint naming: ```PK_<tableName>_<fieldName>```.
+  For example:
+   ```sql
+      CREATE TABLE schema.myTable (
+          rowId INT IDENTITY(1, 1) NOT NULL,
+          rowDesc NVARCHAR(MAX),
+          CONSTRAINT PK_myTable_rowId PRIMARY KEY (rowId)
+      );
+   ```
+   - foreign key constraint naming: ```FK_<childTableName>_<parentTableName>```
+   For example:
+   ```sql
+      CREATE TABLE schema.location (
+          locationId INT IDENTITY(1, 1) NOT NULL,
+          locationName NVARCHAR(MAX) UNIQUE,
+          CONSTRAINT PK_location_locationId PRIMARY KEY (locationId),
+      );
+   
+      CREATE TABLE schema.house (
+          houseId INT IDENTITY(1, 1) NOT NULL,
+          locationId INT NOT NULL,
+          CONSTRAINT PK_house_houseId PRIMARY KEY (houseId),
+          CONSTRAINT FK_house_location FOREIGN KEY (locationId) 
+              REFERENCES schema.location(locationId)
+      );
+   ```
+  - changeset identification:
+    - name part: firstNameLastNameYYYY-MM-DD ```--changeset JohnDoe20240828```
+    - id part: unique within file, not unique across files. Reason being not wanting to deal
+with keeping track of id-s across several files which would be a mess. Tracking by file is sufficient
+as long as file names are also unique.
