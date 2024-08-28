@@ -11,5 +11,7 @@
     <include file="db/changelog/userauth/tables/02_create_table_HashAlgorithm.sql"/>
     <include file="db/changelog/userauth/tables/03_create_table_Permission.sql"/>
     <include file="db/changelog/userauth/tables/04_create_table_UserRole.sql"/>
-
+    <include file="db/changelog/userauth/tables/05_create_table_RolePermissionMap.sql"/>
+    <include file="db/changelog/userauth/tables/06_create_table_Gender.sql"/>
+    <include file="db/changelog/userauth/tables/07_create_table_AccountStatus.sql"/>
 </databaseChangeLog>
