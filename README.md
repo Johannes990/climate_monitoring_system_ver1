@@ -115,31 +115,31 @@ This should be sufficient to get app up and running and logged in.
 
 ### Points about database management:
   - schema names lowercase
-  - table and field names all pascalCase: ```mycoolschema.myCoolTable```
+  - table and field names all capitalized: ```mycoolschema.MyCoolTable```
   - primary key constraint naming: ```PK_<tableName>_<fieldName>```.
   For example:
    ```sql
-      CREATE TABLE schema.myTable (
-          rowId INT IDENTITY(1, 1) NOT NULL,
-          rowDesc NVARCHAR(MAX),
-          CONSTRAINT PK_myTable_rowId PRIMARY KEY (rowId)
+      CREATE TABLE schema.MyTable (
+          RowId INT IDENTITY(1, 1) NOT NULL,
+          RowDesc NVARCHAR(MAX),
+          CONSTRAINT PK_MyTable_RowId PRIMARY KEY (RowId)
       );
    ```
    - foreign key constraint naming: ```FK_<childTableName>_<parentTableName>```
    For example:
    ```sql
-      CREATE TABLE schema.location (
-          locationId INT IDENTITY(1, 1) NOT NULL,
-          locationName NVARCHAR(MAX) UNIQUE,
-          CONSTRAINT PK_location_locationId PRIMARY KEY (locationId),
+      CREATE TABLE schema.Location (
+          LocationId INT IDENTITY(1, 1) NOT NULL,
+          LocationName NVARCHAR(MAX) UNIQUE,
+          CONSTRAINT PK_Location_LocationId PRIMARY KEY (locationId)
       );
    
-      CREATE TABLE schema.house (
-          houseId INT IDENTITY(1, 1) NOT NULL,
-          locationId INT NOT NULL,
-          CONSTRAINT PK_house_houseId PRIMARY KEY (houseId),
-          CONSTRAINT FK_house_location FOREIGN KEY (locationId) 
-              REFERENCES schema.location(locationId)
+      CREATE TABLE schema.House (
+          HouseId INT IDENTITY(1, 1) NOT NULL,
+          LocationId INT NOT NULL,
+          CONSTRAINT PK_House_HouseId PRIMARY KEY (HouseId),
+          CONSTRAINT FK_House_Location FOREIGN KEY (LocationId) 
+              REFERENCES schema.Location(LocationId)
       );
    ```
   - changeset identification:
