@@ -147,3 +147,7 @@ This should be sufficient to get app up and running and logged in.
     - id part: unique within file, not unique across files. Reason being not wanting to deal
 with keeping track of id-s across several files which would be a mess. Tracking by file is sufficient
 as long as file names are also unique.
+
+
+## check this out
+[https://www.youtube.com/watch?v=Z_4Tqmv8Oa4] - about next.js integration
