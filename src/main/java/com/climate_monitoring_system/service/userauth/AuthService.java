@@ -42,5 +42,5 @@ public class AuthService {
         return userMapper.toLoginResponseDTO(loginData);
     }
 
-    public void registerUser()
+    //public void registerUser()
 }
