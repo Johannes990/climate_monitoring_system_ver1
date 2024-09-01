@@ -15,3 +15,10 @@ CREATE TABLE userauth.Gender (
     GenderName NVARCHAR(50) UNIQUE NOT NULL,
     CONSTRAINT PK_Gender_GenderID PRIMARY KEY CLUSTERED (GenderID)
 );
+
+--changeset JohannesJyrgenson20240901:3
+INSERT INTO userauth.Gender (GenderName)
+VALUES ('male');
+
+INSERT INTO userauth.Gender (GenderName)
+VALUES ('female');

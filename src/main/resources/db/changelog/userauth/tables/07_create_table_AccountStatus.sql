@@ -8,3 +8,7 @@ CREATE TABLE userauth.AccountStatus (
     StatusDescription NVARCHAR(MAX),
     CONSTRAINT PK_AccountStatus_StatusID PRIMARY KEY CLUSTERED (StatusID)
 );
+
+--changeset JohannesJyrgenson20240901:2
+INSERT INTO userauth.AccountStatus (StatusName, StatusDescription)
+VALUES ('active', 'Account is active');
