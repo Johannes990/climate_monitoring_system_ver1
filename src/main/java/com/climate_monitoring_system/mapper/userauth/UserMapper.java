@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(source = "UserAccountInfo.firstName", target = "firstName")
-    @Mapping(source = "UserAccountInfo.lastName", target = "lastName")
-    @Mapping(source = "UserAccountInfo.dateOfBirth", target = "dateOfBirth")
-    @Mapping(source = "UserAccountInfo.gender.genderName", target = "gender")
+    @Mapping(source = "userAccountInfo.firstName", target = "firstName")
+    @Mapping(source = "userAccountInfo.lastName", target = "lastName")
+    @Mapping(source = "userAccountInfo.dateOfBirth", target = "dateOfBirth")
+    @Mapping(source = "userAccountInfo.gender.genderName", target = "gender")
     LoginResponseDTO toLoginResponseDTO(UserAccountLoginData userAccountLoginData);
 }

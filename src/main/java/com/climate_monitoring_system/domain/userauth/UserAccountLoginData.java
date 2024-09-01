@@ -13,10 +13,11 @@ import lombok.Setter;
 public class UserAccountLoginData {
     @Id
     @OneToOne
-    @JoinColumn(name = "UserID")
+    @JoinColumn(name = "UserID", referencedColumnName = "UserID")
+    @MapsId
     private UserAccountInfo userAccountInfo;
 
-    @Column(name = "Email")
+    @Column(name = "Email", unique = true)
     @NotNull
     @Email
     private String email;

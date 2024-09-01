@@ -16,6 +16,9 @@ public class UserAccountInfo {
     @Column(name = "UserID")
     private int UserId;
 
+    @OneToOne(mappedBy = "userAccountInfo", cascade = CascadeType.ALL)
+    private UserAccountLoginData userAccountLoginData;
+
     @NotNull
     @JoinColumn(name = "AccountStatus")
     @ManyToOne
