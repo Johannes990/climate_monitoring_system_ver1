@@ -18,6 +18,8 @@ public class AuthService {
     private UserAccountLoginDataRepository userAccountLoginDataRepository;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private PasswordService passwordService;
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
         Optional<UserAccountLoginData> loginDataOptional = userAccountLoginDataRepository
@@ -27,10 +29,9 @@ public class AuthService {
         }
 
         UserAccountLoginData loginData = loginDataOptional.get();
-        boolean isPasswordValid = passwordService.verifyPassword(
+        boolean isPasswordValid = passwordService.checkPassword(
                 loginRequestDTO.getPassword(),
-                loginData.getPasswordHash(), 
-                loginData.getPasswordSalt(),
+                loginData.getPasswordHash(),
                 loginData.getHashAlgorithm()
         );
 
@@ -40,4 +41,6 @@ public class AuthService {
 
         return userMapper.toLoginResponseDTO(loginData);
     }
+
+    public void registerUser()
 }
