@@ -3,13 +3,11 @@ package com.climate_monitoring_system.controller.userauth;
 import com.climate_monitoring_system.dto.userauth.AccountDTO;
 import com.climate_monitoring_system.dto.userauth.LoginDTO;
 import com.climate_monitoring_system.dto.userauth.RegisterDTO;
-import com.climate_monitoring_system.dto.userauth.UserDTO;
 import com.climate_monitoring_system.service.userauth.AccountService;
 import com.climate_monitoring_system.service.userauth.AuthenticationService;
 import com.climate_monitoring_system.service.userauth.PasswordService;
 import com.climate_monitoring_system.service.userauth.AppUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

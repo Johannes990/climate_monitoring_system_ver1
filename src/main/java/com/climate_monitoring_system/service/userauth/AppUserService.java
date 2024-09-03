@@ -3,7 +3,6 @@ package com.climate_monitoring_system.service.userauth;
 import com.climate_monitoring_system.domain.userauth.Account;
 import com.climate_monitoring_system.domain.userauth.AppUser;
 import com.climate_monitoring_system.dto.userauth.AccountDTO;
-import com.climate_monitoring_system.dto.userauth.RegisterDTO;
 import com.climate_monitoring_system.dto.userauth.UserDTO;
 import com.climate_monitoring_system.repository.userauth.UserRepository;
 import lombok.RequiredArgsConstructor;
