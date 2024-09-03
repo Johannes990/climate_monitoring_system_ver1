@@ -28,7 +28,7 @@ public class AuthenticationService {
         AppUser user = optionalUser.get();
 
         return passwordService.validatePassword(loginDTO.getPassword(), user.getPasswordHash());
-    };
+    }
 
     public boolean registerUser(RegisterDTO registerDTO) {
         if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
