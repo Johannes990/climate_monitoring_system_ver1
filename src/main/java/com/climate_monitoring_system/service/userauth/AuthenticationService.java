@@ -54,7 +54,7 @@ public class AuthenticationService {
         AppUser newUser = new AppUser();
         newUser.setFirstName(registerDTO.getFirstName());
         newUser.setLastName(registerDTO.getLastName());
-        newUser.setUserName(registerDTO.getUsername());
+        newUser.setUserName(registerDTO.getUserName());
         newUser.setEmail(registerDTO.getEmail());
         newUser.setPasswordHash(hashedPassword);
         newUser.setAccountId(account);

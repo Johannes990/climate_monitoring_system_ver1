@@ -3,6 +3,7 @@ package com.climate_monitoring_system.service.userauth;
 import com.climate_monitoring_system.domain.userauth.Account;
 import com.climate_monitoring_system.domain.userauth.AppUser;
 import com.climate_monitoring_system.dto.userauth.AccountDTO;
+import com.climate_monitoring_system.dto.userauth.RegisterDTO;
 import com.climate_monitoring_system.dto.userauth.UserDTO;
 import com.climate_monitoring_system.repository.userauth.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AppUserService {
     private final UserRepository userRepository;
 
     public UserDTO findByUserName(String userName) {

@@ -6,6 +6,8 @@ import com.climate_monitoring_system.repository.userauth.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,25 +18,38 @@ public class AccountService {
     public AccountDTO getAccountById(long id) {
         Optional<Account> account = accountRepository.findById(id);
 
-        return getAccountDTO(account);
+        return checkIfAccountPresentAndReturnAccountDTO(account);
     }
 
     public AccountDTO getAccountByAccountType(String accountType) {
         Optional<Account> account = accountRepository.findByAccountType(accountType);
 
-        return getAccountDTO(account);
+        return checkIfAccountPresentAndReturnAccountDTO(account);
     }
 
-    private AccountDTO getAccountDTO(Optional<Account> account) {
-        if (account.isPresent()) {
-            Account foundAccount = account.get();
+    public List<AccountDTO> getAllAccounts() {
+        List<AccountDTO> accountDTOs = new ArrayList<>();
+        List<Account> accounts = accountRepository.findAll();
 
-            AccountDTO accountDTO = new AccountDTO();
-            accountDTO.setAccountId(foundAccount.getAccountId());
-            accountDTO.setAccountType(foundAccount.getAccountType());
-            return accountDTO;
+        for (Account account : accounts) {
+            accountDTOs.add(getAccountDTO(account));
+        }
+
+        return accountDTOs;
+    }
+
+    private AccountDTO checkIfAccountPresentAndReturnAccountDTO(Optional<Account> optionalAccount) {
+        if (optionalAccount.isPresent()) {
+            return getAccountDTO(optionalAccount.get());
         }
 
         return new AccountDTO();
+    }
+
+    private AccountDTO getAccountDTO(Account account) {
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAccountId(account.getAccountId());
+        accountDTO.setAccountType(account.getAccountType());
+        return accountDTO;
     }
 }
