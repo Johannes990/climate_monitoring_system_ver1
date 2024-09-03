@@ -1,6 +1,5 @@
 package com.climate_monitoring_system.repository.userauth;
 
-import com.climate_monitoring_system.domain.userauth.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

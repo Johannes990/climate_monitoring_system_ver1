@@ -1,6 +1,5 @@
 package com.climate_monitoring_system.repository.userauth;
 
-import com.climate_monitoring_system.domain.userauth.HashAlgorithm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,20 +1,22 @@
 package com.climate_monitoring_system.service.userauth;
 
-import com.climate_monitoring_system.domain.userauth.HashAlgorithm;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PasswordService {
-    public String hashPassword(String rawPassword) {
-        return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+    private final PasswordEncoder passwordEncoder;
+
+    public PasswordService() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public boolean checkPassword(String rawPassword, String storedHash, HashAlgorithm algorithm) {
-        if (algorithm.getHashAlgorithmName().equalsIgnoreCase("bcrypt")) {
-            return BCrypt.checkpw(rawPassword, storedHash);
-        }
+    public boolean validatePassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 
-        throw new IllegalArgumentException("Unsupported Hash Algorithm");
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 }
