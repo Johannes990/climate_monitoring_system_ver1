@@ -39,11 +39,8 @@ public class AccountService {
     }
 
     private AccountDTO checkIfAccountPresentAndReturnAccountDTO(Optional<Account> optionalAccount) {
-        if (optionalAccount.isPresent()) {
-            return getAccountDTO(optionalAccount.get());
-        }
+        return optionalAccount.map(this::getAccountDTO).orElseGet(AccountDTO::new);
 
-        return new AccountDTO();
     }
 
     private AccountDTO getAccountDTO(Account account) {

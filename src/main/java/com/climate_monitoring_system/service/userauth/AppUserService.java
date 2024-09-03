@@ -8,6 +8,8 @@ import com.climate_monitoring_system.repository.userauth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,16 +26,19 @@ public class AppUserService {
 
         AppUser user = optionalUser.get();
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(user.getUserId());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setUsername(user.getUserName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPasswordHash());
-        userDTO.setAccount(getAccountDTO(user.getAccountId()));
+        return makeUserDTO(user);
+    }
 
-        return userDTO;
+    public List<UserDTO> findAll() {
+        List<AppUser> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (AppUser user : users) {
+            UserDTO userDTO = makeUserDTO(user);
+            userDTOs.add(userDTO);
+        }
+
+        return userDTOs;
     }
 
     private AccountDTO getAccountDTO(Account account) {
@@ -42,5 +47,17 @@ public class AppUserService {
         newDTO.setAccountType(account.getAccountType());
 
         return newDTO;
+    }
+
+    private UserDTO makeUserDTO(AppUser user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setUsername(user.getUserName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPasswordHash());
+        userDTO.setAccount(getAccountDTO(user.getAccountId()));
+        return userDTO;
     }
 }
