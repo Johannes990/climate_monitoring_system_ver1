@@ -4,6 +4,8 @@ import com.climate_monitoring_system.domain.userauth.Account;
 import com.climate_monitoring_system.domain.userauth.AppUser;
 import com.climate_monitoring_system.dto.userauth.LoginDTO;
 import com.climate_monitoring_system.dto.userauth.RegisterDTO;
+import com.climate_monitoring_system.exceptions.EmailAlreadyExistsException;
+import com.climate_monitoring_system.exceptions.EmailNotFoundException;
 import com.climate_monitoring_system.repository.userauth.AccountRepository;
 import com.climate_monitoring_system.repository.userauth.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,9 @@ public class AuthenticationService {
     public boolean loginUser(LoginDTO loginDTO) {
         Optional<AppUser> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
         if (optionalUser.isEmpty()) {
-            return false;
+            throw new EmailNotFoundException(
+                    "Email " + loginDTO.getEmail() + " not found"
+            );
         }
 
         AppUser user = optionalUser.get();
@@ -32,7 +36,9 @@ public class AuthenticationService {
 
     public boolean registerUser(RegisterDTO registerDTO) {
         if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
-            return false; // email already used
+            throw new EmailAlreadyExistsException(
+                    "Email " + registerDTO.getEmail() + " already exists"
+            );
         }
 
         String hashedPassword = passwordService.encodePassword(registerDTO.getPassword());
