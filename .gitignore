@@ -44,3 +44,4 @@ log/
 
 ### Sensitive info like passwords, usernames, database URL-s ###
 src/main/resources/application-db.properties
+/secrets/machine-key
