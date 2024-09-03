@@ -15,3 +15,13 @@ CREATE TABLE userauth.AppUser (
     CONSTRAINT FK_AppUser_Account FOREIGN KEY (AccountId)
         REFERENCES userauth.Account(AccountId)
 );
+
+
+--changeset JohannesJyrgenson20240903:2
+INSERT INTO userauth.AppUser (FirstName, LastName, UserName, Email, PasswordHash, AccountId)
+VALUES ('Johannes',
+        'Jyrgenson',
+        'System Creator',
+        'Johannes.Jyrgenson@Note-EMS.com',
+        '$2a$10$rhscX/JgSaMa7iyn8rKjRerOx4oOINWpoDxL6K2mKCT47LbxNJB7u',
+        1);
