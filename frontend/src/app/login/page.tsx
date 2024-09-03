@@ -1,10 +1,13 @@
-'use client'
+"use client";
 
-export default function Home() {
+import { useRouter } from "next/navigation";
+
+export default function Login() {
+    const router = useRouter();
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // You can handle the form submission here
-        console.log("Form submitted!");
+        console.log("Login form submitted");
     };
 
     return (
@@ -47,6 +50,15 @@ export default function Home() {
                         </button>
                     </div>
                 </form>
+
+                <div className="text-center">
+                    <button
+                        onClick={() => router.push("/register")}
+                        className="mt-4 text-blue-600 hover:underline"
+                    >
+                        Don't have an account? Register here
+                    </button>
+                </div>
             </div>
         </main>
     );
