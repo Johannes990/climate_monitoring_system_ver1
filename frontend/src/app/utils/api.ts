@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
 export async function postRequest<T>(url: string, data: T): Promise<Response> {
@@ -7,6 +7,7 @@ export async function postRequest<T>(url: string, data: T): Promise<Response> {
 
         const response = await fetch(`${API_URL}${url}`, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
