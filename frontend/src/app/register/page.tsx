@@ -37,9 +37,11 @@ export default function Register() {
             const response = await postRequest("/register", registerFormData);
 
             if (response.ok) {
-                console.log("Registration successful");
+                const responseBody = await response.text();
+                console.log("Registration successful:", responseBody);
             } else {
-                setErrorMessage("Registration failed, please try again.");
+                const errorBody = await response.text();
+                setErrorMessage(errorBody);
             }
         } catch (error) {
             setErrorMessage("An error occurred during registration.");

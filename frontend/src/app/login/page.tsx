@@ -1,13 +1,46 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { LoginDTO } from "../dto/userauth/loginDTO";
+import { useState } from "react";
+import { postRequest } from "@/app/utils/api";
 
 export default function Login() {
+    const [loginFormData, setLoginFormData] = useState<LoginDTO>({
+        email: "",
+        password: "",
+    });
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setLoginFormData({
+            ...loginFormData,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Login form submitted");
+
+        try {
+            const response = await postRequest("/login", loginFormData);
+
+            if (response.ok) {
+                const responseBody = await response.text();
+                console.log("Login successful:", responseBody);
+                router.push("/dashboard");
+            } else {
+                const errorBody = await response.text();
+                setErrorMessage(errorBody);
+            }
+        } catch (error) {
+            setErrorMessage("An error occurred during login.");
+            console.error("Login error:", error);
+        }
+        setErrorMessage("");
     };
 
     return (
@@ -26,6 +59,8 @@ export default function Login() {
                             required
                             className="w-full p-2 border border-gray-300 rounded mt-1"
                             placeholder="Enter your email"
+                            value={loginFormData.email}
+                            onChange={handleChange}
                         />
                     </div>
                     <div>
@@ -39,8 +74,13 @@ export default function Login() {
                             required
                             className="w-full p-2 border border-gray-300 rounded mt-1"
                             placeholder="Enter your password"
+                            value={loginFormData.password}
+                            onChange={handleChange}
                         />
                     </div>
+
+                    {errorMessage && (<p className="text-red-500 text-sm">{errorMessage}</p>)}
+
                     <div>
                         <button
                             type="submit"
