@@ -10,21 +10,6 @@ export default function Dashboard() {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
 
-    async function logout() {
-        try {
-            const response = await getRequest("/logout");
-
-            if (response.ok) {
-                router.push(LOGIN_URL_PATH);
-            } else {
-                setErrorMessage("Logout failed!");
-            }
-        } catch (error) {
-            setErrorMessage("An error occurred during logout.");
-            console.error("Logout error:", error);
-        }
-    }
-
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
@@ -82,9 +67,6 @@ export default function Dashboard() {
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Dashboard</h1>
                 <p className="text-center">Welcome to your dashboard!</p>
-                <button onClick={logout} className="w-full p-2 text-white bg-red-600 rounded hover:bg-red-700">
-                    Logout
-                </button>
             </div>
         </main>
     );
