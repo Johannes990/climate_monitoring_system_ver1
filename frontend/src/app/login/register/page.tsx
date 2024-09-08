@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { RegisterDTO } from "../dto/userauth/RegisterDTO";
+import { RegisterDTO } from "../../dto/userauth/RegisterDTO";
 import { postRequest } from "@/app/utils/api";
+import {router} from "next/client";
+import {LOGIN_URL_PATH} from "@/app/utils/constants";
 
 export default function Register() {
     const [registerFormData, setRegisterFormData] = useState<RegisterDTO>({
@@ -39,6 +41,7 @@ export default function Register() {
             if (response.ok) {
                 const responseBody = await response.text();
                 console.log("Registration successful:", responseBody);
+                router.push(LOGIN_URL_PATH)
             } else {
                 const errorBody = await response.text();
                 setErrorMessage(errorBody);

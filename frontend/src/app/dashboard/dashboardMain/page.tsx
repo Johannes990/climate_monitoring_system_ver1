@@ -1,8 +1,9 @@
 "use client";
 
-import { API_URL } from "@/app/utils/api";
+import { getRequest} from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LOGIN_URL_PATH} from "@/app/utils/constants";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -12,10 +13,7 @@ export default function Dashboard() {
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const response = await fetch(`${API_URL}/protected`, {
-                    method: "GET",
-                    credentials: "include", // Ensure cookies are included
-                });
+                const response = await getRequest("/protected")
 
                 console.log("Protected endpoint response:", response.status);
 
@@ -26,17 +24,17 @@ export default function Dashboard() {
                     } else {
                         setErrorMessage("Access to protected resources denied!");
                         console.log("Access to protected resources denied:", response.status);
-                        router.push("/login"); // Redirect to login if not authenticated
+                        router.push(LOGIN_URL_PATH); // Redirect to login if not authenticated
                     }
                 } else {
                     setErrorMessage("An error occurred while checking authentication.");
                     console.log("An error occurred while checking authentication:", response.status);
-                    router.push("/login"); // Redirect to login if there's an error
+                    router.push(LOGIN_URL_PATH); // Redirect to login if there's an error
                 }
             } catch (error) {
                 setErrorMessage("An error occurred during authentication check.");
                 console.error("Authentication check error:", error);
-                router.push("/login"); // Redirect to login if there's an error
+                router.push(LOGIN_URL_PATH); // Redirect to login if there's an error
             }
         };
 
@@ -69,28 +67,6 @@ export default function Dashboard() {
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Dashboard</h1>
                 <p className="text-center">Welcome to your dashboard!</p>
-                <button
-                    onClick={async () => {
-                        try {
-                            const response = await fetch("/logout", {
-                                method: "GET",
-                                credentials: "include",
-                            });
-
-                            if (response.ok) {
-                                router.push("/login");
-                            } else {
-                                setErrorMessage("Logout failed!");
-                            }
-                        } catch (error) {
-                            setErrorMessage("An error occurred during logout.");
-                            console.error("Logout error:", error);
-                        }
-                    }}
-                    className="w-full p-2 text-white bg-red-600 rounded hover:bg-red-700"
-                >
-                    Logout
-                </button>
             </div>
         </main>
     );

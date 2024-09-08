@@ -31,3 +31,46 @@ body {
     text-wrap: balance;
   }
 }
+
+.navbar {
+  padding: 1rem;
+  background-color: darkblue;
+  color: white;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-link {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.nav-button {
+  background-color: #4299e1;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.nav-button:hover {
+  background-color: #2b6cb0;
+}
