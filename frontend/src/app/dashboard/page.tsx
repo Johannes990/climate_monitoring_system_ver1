@@ -74,7 +74,7 @@ export default function Dashboard() {
                         try {
                             const response = await fetch("/logout", {
                                 method: "GET",
-                                credentials: "include", // Ensure cookies are included
+                                credentials: "include",
                             });
 
                             if (response.ok) {
