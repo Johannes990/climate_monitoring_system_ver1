@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'com.microsoft.sqlserver:mssql-jdbc'
 	implementation 'org.mapstruct:mapstruct:1.6.0'
+	implementation 'org.springframework.security:spring-security-core:6.3.0'
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

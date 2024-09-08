@@ -7,13 +7,10 @@
 
     <!--file includes must follow a particular order-->
     <!--in particular, tables referred to by foreign keys must exist before key creation-->
+
     <include file="db/changelog/userauth/schema/01_create_schema_userauth.sql"/>
-    <include file="db/changelog/userauth/tables/02_create_table_HashAlgorithm.sql"/>
-    <include file="db/changelog/userauth/tables/03_create_table_Permission.sql"/>
-    <include file="db/changelog/userauth/tables/04_create_table_UserRole.sql"/>
-    <include file="db/changelog/userauth/tables/05_create_table_RolePermissionMap.sql"/>
-    <include file="db/changelog/userauth/tables/06_create_table_Gender.sql"/>
-    <include file="db/changelog/userauth/tables/07_create_table_AccountStatus.sql"/>
-    <include file="db/changelog/userauth/tables/08_create_table_UserAccountInfo.sql"/>
-    <include file="db/changelog/userauth/tables/09_create_table_UserAccountLoginData.sql"/>
+    <include file="/db/changelog/userauth/tables/10_create_table_Account.sql"/>
+    <include file="/db/changelog/userauth/tables/11_create_table_AppUser.sql"/>
+
+
 </databaseChangeLog>

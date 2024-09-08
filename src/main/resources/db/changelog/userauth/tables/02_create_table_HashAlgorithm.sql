@@ -7,3 +7,7 @@ CREATE TABLE userauth.HashAlgorithm (
     HashAlgorithmName NVARCHAR(50) UNIQUE NOT NULL,
     CONSTRAINT PK_HashAlgorithm_HashAlgorithmID PRIMARY KEY CLUSTERED (HashAlgorithmID)
 );
+
+--changeset JohannesJyrgenson20240901:2
+INSERT INTO userauth.HashAlgorithm (HashAlgorithmName)
+VALUES ('bcrypt');
