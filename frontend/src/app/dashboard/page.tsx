@@ -3,7 +3,6 @@
 import { getRequest} from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {router} from "next/client";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);

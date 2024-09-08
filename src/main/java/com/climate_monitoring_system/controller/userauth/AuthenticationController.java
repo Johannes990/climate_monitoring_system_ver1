@@ -5,9 +5,7 @@ import com.climate_monitoring_system.dto.userauth.RegisterDTO;
 import com.climate_monitoring_system.dto.userauth.UserDTO;
 import com.climate_monitoring_system.service.userauth.AuthenticationService;
 import com.climate_monitoring_system.service.userauth.AppUserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,18 +21,10 @@ public class AuthenticationController {
     private final AppUserService appUserService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         if (authenticationService.loginUser(loginDTO)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", loginDTO.getEmail());
-/*
-            Cookie cookie = new Cookie("sessionid", session.getId());
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(1800);
-            response.addCookie(cookie);
-
- */
             return ResponseEntity.ok("Login Successful!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
