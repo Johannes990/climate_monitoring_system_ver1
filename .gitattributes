@@ -1,2 +1,2 @@
 frontend/* linguist-documentation
-src/main/resources/* linguist-documentation
+src/main/resources/db.changelog/* linguist-documentation
