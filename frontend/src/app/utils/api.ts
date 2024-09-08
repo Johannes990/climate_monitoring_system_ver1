@@ -29,15 +29,13 @@ export async function getRequest(url: string): Promise<Response> {
     try {
         console.log(`${API_URL}${url}`)
 
-        const response = await fetch(`${API_URL}${url}`, {
+        return await fetch(`${API_URL}${url}`, {
             method: "GET",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
         });
-
-        return response;
     } catch (error) {
         console.error("API get request error:", error);
         throw error;

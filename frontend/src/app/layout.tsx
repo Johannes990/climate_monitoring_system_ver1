@@ -4,8 +4,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "My App",
-  description: "My Next.js Application",
+  title: "Climate Monitoring",
+  description: "Climate monitoring system application",
 };
 
 export default function RootLayout({
@@ -13,27 +13,22 @@ export default function RootLayout({
                                    }: {
   children: React.ReactNode;
 }) {
-  return (
-      <html lang="en">
-      <body className={inter.className}>
-      <nav className="p-4 bg-gray-800 text-white">
-          <div className="container mx-auto">
-              <a href="/" className="mr-4 hover:underline">
-                  Home
-              </a>
-              <a href="/login" className="mr-4 hover:underline">
-                  Login
-              </a>
-              <a href="/register" className="mr-4 hover:underline">
-                  Register
-              </a>
-              <a href="/dashboard" className="mr-4 hover:underline">
-                  Dashboard
-              </a>
-          </div>
-      </nav>
-      <main>{children}</main>
-      </body>
-      </html>
-  );
+    return (
+        <html lang="en">
+        <body className={inter.className}>
+        <nav className="p-4 bg-gray-800 text-white">
+            <div className="navbar">
+                <div className="navbar-container">
+                    <div className="nav-links">
+                        <a href="/login" className="nav-link">Login</a>
+                        <a href="/register" className="nav-link">Register</a>
+                        <a href="/dashboard" className="nav-link">Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main>{children}</main>
+        </body>
+        </html>
+    );
 }
