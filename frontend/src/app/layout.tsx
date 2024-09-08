@@ -13,6 +13,7 @@ export default function RootLayout({
                                    }: {
   children: React.ReactNode;
 }) {
+
     return (
         <html lang="en">
         <body className={inter.className}>
@@ -23,6 +24,9 @@ export default function RootLayout({
                         <a href="/login" className="nav-link">Login</a>
                         <a href="/register" className="nav-link">Register</a>
                         <a href="/dashboard" className="nav-link">Dashboard</a>
+                    </div>
+                    <div>
+                        <button className="nav-button">Logout</button>
                     </div>
                 </div>
             </div>

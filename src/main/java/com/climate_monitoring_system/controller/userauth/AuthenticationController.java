@@ -27,13 +27,14 @@ public class AuthenticationController {
         if (authenticationService.loginUser(loginDTO)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", loginDTO.getEmail());
-
+/*
             Cookie cookie = new Cookie("sessionid", session.getId());
             cookie.setPath("/");
             cookie.setHttpOnly(true);
             cookie.setMaxAge(1800);
-
             response.addCookie(cookie);
+
+ */
             return ResponseEntity.ok("Login Successful!");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");

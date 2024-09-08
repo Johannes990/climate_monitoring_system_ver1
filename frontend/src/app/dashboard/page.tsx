@@ -1,21 +1,34 @@
 "use client";
 
-import { API_URL } from "@/app/utils/api";
+import { getRequest} from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import {router} from "next/client";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const router = useRouter();
 
+    async function logout() {
+        try {
+            const response = await getRequest("/logout");
+
+            if (response.ok) {
+                router.push("/login");
+            } else {
+                setErrorMessage("Logout failed!");
+            }
+        } catch (error) {
+            setErrorMessage("An error occurred during logout.");
+            console.error("Logout error:", error);
+        }
+    }
+
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const response = await fetch(`${API_URL}/protected`, {
-                    method: "GET",
-                    credentials: "include", // Ensure cookies are included
-                });
+                const response = await getRequest("/protected")
 
                 console.log("Protected endpoint response:", response.status);
 
@@ -69,26 +82,7 @@ export default function Dashboard() {
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Dashboard</h1>
                 <p className="text-center">Welcome to your dashboard!</p>
-                <button
-                    onClick={async () => {
-                        try {
-                            const response = await fetch("/logout", {
-                                method: "GET",
-                                credentials: "include",
-                            });
-
-                            if (response.ok) {
-                                router.push("/login");
-                            } else {
-                                setErrorMessage("Logout failed!");
-                            }
-                        } catch (error) {
-                            setErrorMessage("An error occurred during logout.");
-                            console.error("Logout error:", error);
-                        }
-                    }}
-                    className="w-full p-2 text-white bg-red-600 rounded hover:bg-red-700"
-                >
+                <button onClick={logout} className="w-full p-2 text-white bg-red-600 rounded hover:bg-red-700">
                     Logout
                 </button>
             </div>
