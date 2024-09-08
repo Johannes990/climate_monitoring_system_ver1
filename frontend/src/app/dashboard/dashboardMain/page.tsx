@@ -3,6 +3,7 @@
 import { getRequest} from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LOGIN_URL_PATH} from "@/app/utils/constants";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -14,7 +15,7 @@ export default function Dashboard() {
             const response = await getRequest("/logout");
 
             if (response.ok) {
-                router.push("/login");
+                router.push(LOGIN_URL_PATH);
             } else {
                 setErrorMessage("Logout failed!");
             }
@@ -38,17 +39,17 @@ export default function Dashboard() {
                     } else {
                         setErrorMessage("Access to protected resources denied!");
                         console.log("Access to protected resources denied:", response.status);
-                        router.push("/login"); // Redirect to login if not authenticated
+                        router.push(LOGIN_URL_PATH); // Redirect to login if not authenticated
                     }
                 } else {
                     setErrorMessage("An error occurred while checking authentication.");
                     console.log("An error occurred while checking authentication:", response.status);
-                    router.push("/login"); // Redirect to login if there's an error
+                    router.push(LOGIN_URL_PATH); // Redirect to login if there's an error
                 }
             } catch (error) {
                 setErrorMessage("An error occurred during authentication check.");
                 console.error("Authentication check error:", error);
-                router.push("/login"); // Redirect to login if there's an error
+                router.push(LOGIN_URL_PATH); // Redirect to login if there's an error
             }
         };
 

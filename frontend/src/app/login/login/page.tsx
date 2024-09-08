@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { LoginDTO } from "../dto/userauth/loginDTO";
+import { LoginDTO } from "../../dto/userauth/loginDTO";
 import { useState } from "react";
 import { postRequest } from "@/app/utils/api";
+import {DASHBOARD_URL_PATH, REGISTER_URL_PATH} from "@/app/utils/constants";
 
 export default function Login() {
     const [loginFormData, setLoginFormData] = useState<LoginDTO>({
@@ -31,16 +32,16 @@ export default function Login() {
             if (response.ok) {
                 const responseBody = await response.text();
                 console.log("Login successful:", responseBody);
-                router.push("/dashboard");
+                router.push(DASHBOARD_URL_PATH);
             } else {
                 const errorBody = await response.text();
                 setErrorMessage(errorBody);
             }
         } catch (error) {
-            setErrorMessage("An error occurred during login.");
+            setErrorMessage("An error occurred during login. Please check your credentials.");
             console.error("Login error:", error);
         }
-        setErrorMessage("");
+        //setErrorMessage("");
     };
 
     return (
@@ -93,7 +94,7 @@ export default function Login() {
 
                 <div className="text-center">
                     <button
-                        onClick={() => router.push("/register")}
+                        onClick={() => router.push(REGISTER_URL_PATH)}
                         className="mt-4 text-blue-600 hover:underline"
                     >
                         Don't have an account? Register here
