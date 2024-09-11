@@ -25,3 +25,12 @@ VALUES ('Johannes',
         'Johannes.Jyrgenson@Note-EMS.com',
         '$2a$10$rhscX/JgSaMa7iyn8rKjRerOx4oOINWpoDxL6K2mKCT47LbxNJB7u',
         1);
+
+
+--changeset JohannesJyrgenson20240911:3
+ALTER TABLE userauth.AppUser ALTER COLUMN AccountId INT NULL;
+ALTER TABLE userauth.AppUser DROP CONSTRAINT FK_AppUser_Account;
+ALTER TABLE userauth.AppUser ADD CONSTRAINT FK_AppUser_Account
+    FOREIGN KEY (AccountId)
+    REFERENCES userauth.Account(AccountId)
+    ON DELETE SET NULL;

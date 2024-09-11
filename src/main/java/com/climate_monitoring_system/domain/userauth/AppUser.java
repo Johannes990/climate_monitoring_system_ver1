@@ -38,6 +38,6 @@ public class AppUser {
     private String passwordHash;
 
     @ManyToOne
-    @JoinColumn(name = "AccountId", nullable = false)
+    @JoinColumn(name = "AccountId")
     private Account accountId;
 }
