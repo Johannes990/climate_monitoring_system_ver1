@@ -1,6 +1,8 @@
 package com.climate_monitoring_system.repository.userauth;
 
+import com.climate_monitoring_system.domain.userauth.Account;
 import com.climate_monitoring_system.domain.userauth.AppUser;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,6 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     public void testUserRepositoryNotNull() {
@@ -86,5 +92,41 @@ public class UserRepositoryTest {
         assertThat(user.getFirstName()).isEqualTo(expectedFirstName);
         assertThat(user.getLastName()).isEqualTo(expectedLastName);
         assertThat(user.getEmail()).isEqualTo(expectedEmail);
+    }
+
+    @Test
+    public void testUserRepositoryCrudOperations() {
+        final String firstName = "Andre";
+        final String lastName = "Cabanoss";
+        final String userName = "Spanish guy";
+        final String newUserName = "Hacker guy";
+        final String email = "Spanish@Spanish.com";
+        final String newEmail = "hacker@Spanish.com";
+        final String passwordHash = "Spanishwef984ewv654grv64";
+        final long viewOnlyAccountId = 3L;
+
+        Account viewOnlyAccount = accountRepository.getReferenceById(viewOnlyAccountId);
+        AppUser newUser = new AppUser();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setUserName(userName);
+        newUser.setEmail(email);
+        newUser.setPasswordHash(passwordHash);
+        newUser.setAccountId(viewOnlyAccount);
+
+        AppUser savedUser = entityManager.persistAndFlush(newUser);
+        assertThat(savedUser.getUserId()).isNotNull();
+
+        savedUser.setEmail(newEmail);
+        savedUser.setUserName(newUserName);
+
+        userRepository.save(savedUser);
+        assertThat(entityManager.find(AppUser.class, savedUser.getUserId()).getUserName())
+                .isEqualTo(newUserName);
+        assertThat(entityManager.find(AppUser.class, savedUser.getUserId()).getEmail())
+                .isEqualTo(newEmail);
+
+        userRepository.delete(savedUser);
+        assertThat(entityManager.find(AppUser.class, savedUser.getUserId())).isNull();
     }
 }
