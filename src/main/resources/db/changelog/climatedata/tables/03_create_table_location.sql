@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 --changeset JohannesJyrgenson20240911:1
-CREATE TABLE Location (
+CREATE TABLE climatedata.Location (
     LocationId INT IDENTITY(1, 1) NOT NULL,
     LocationDescription NVARCHAR(MAX),
     ControlParameterSetId INT,
