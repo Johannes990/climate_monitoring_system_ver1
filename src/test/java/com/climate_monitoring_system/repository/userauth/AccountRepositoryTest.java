@@ -28,7 +28,7 @@ public class AccountRepositoryTest {
     @Test
     public void testAccountRepositoryHoldsDefaultAccounts() {
         List<Account> accounts = accountRepository.findAll();
-        List<String> accountTypes = Arrays.asList("Administrator", "Regular", "View only");
+        final List<String> accountTypes = Arrays.asList("Administrator", "Regular", "View only");
 
         // we should have 3 accounts in db from liquibase changelogs
         // 'Administrator', 'Regular' and 'View only'
