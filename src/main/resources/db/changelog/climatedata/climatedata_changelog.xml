@@ -8,4 +8,8 @@
     <!--file includes must follow a particular order-->
     <!--in particular, tables referred to by foreign keys must exist before key creation-->
     <include file="db/changelog/climatedata/schema/01_create_schema_climatedata.sql"/>
+    <include file="db/changelog/climatedata/tables/02_create_table_controlparameterset.sql"/>
+    <include file="db/changelog/climatedata/tables/03_create_table_location.sql"/>
+    <include file="db/changelog/climatedata/tables/04_create_table_sensor.sql"/>
+    <include file="db/changelog/climatedata/tables/05_create_table_sensorreading.sql"/>
 </databaseChangeLog>
