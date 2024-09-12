@@ -22,7 +22,7 @@ public class SensorReading {
     @Column(name = "RelHumidity")
     private float relHumidity;
 
-    @Column(name = "ReadingTime")
+    @Column(name = "ReadingTime", insertable = false, updatable = false)
     private Timestamp readingTime;
 
     @ManyToOne
