@@ -9,3 +9,12 @@ CREATE TABLE climatedata.ControlParameterSet (
     RelHumidityTolerance REAL NOT NULL,
     CONSTRAINT PK_ControlParameterSet_ControlParameterSetId PRIMARY KEY CLUSTERED (ControlParameterSetId)
 );
+
+--changeset JohannesJyrgenson20240912:2
+INSERT INTO climatedata.ControlParameterSet (TempNorm,
+                                             TempTolerance,
+                                             RelHumidityNorm,
+                                             RelHumidityTolerance)
+VALUES (22.0, 4.0, 45.0, 15.0),
+       (8.0, 4.0, 50.0, 50.0),
+       (30.0, 10.0, 50.0, 50.0);

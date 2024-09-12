@@ -28,3 +28,10 @@ CREATE TABLE climatedata.Sensor (
                             ON UPDATE CASCADE
                             ON DELETE SET NULL
 );
+
+--changeset JohannesJyrgenson20240912:3
+INSERT INTO climatedata.Sensor (PassKey, DeviceCode, TempUnit, LocationId)
+VALUES ('15961202', '3510', 'C', 1),
+       ('15961868', '3510', 'C', 4),
+       ('18961817', '3510', 'C', 2),
+       ('18941697', '3510', 'C', 3);

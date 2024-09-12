@@ -24,3 +24,10 @@ CREATE TABLE climatedata.Location (
                               ON UPDATE CASCADE
                               ON DELETE SET NULL
 );
+
+--changeset JohannesJyrgenson20240912:3
+INSERT INTO climatedata.Location (LocationDescription, ControlParameterSetId)
+VALUES ('Saal 1', 1),
+       ('SMT Fridge', 2),
+       ('EPO', 3),
+       ('Saal 2', 1);
