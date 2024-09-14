@@ -19,6 +19,10 @@ public class SensorReadingRepositoryTest {
     private SensorRepository sensorRepository;
     @Autowired
     private TestEntityManager entityManager;
+    final float tempReading = 24.2f;
+    final float newTempReading = 23.9f;
+    final float humidityReading = 57.4f;
+    final float newHumidityReading = 58.0f;
 
     @Test
     public void testSensorReadingRepositoryNotNull() {
@@ -27,10 +31,6 @@ public class SensorReadingRepositoryTest {
 
     @Test
     public void testSensorReadingRepositoryCrudOperations() {
-        final float tempReading = 24.2f;
-        final float newTempReading = 23.9f;
-        final float humidityReading = 57.4f;
-        final float newHumidityReading = 58.0f;
         final Sensor sensor = sensorRepository.getReferenceById(1L);
         final SensorReading sensorReading = new SensorReading();
         sensorReading.setTemperature(tempReading);
@@ -46,10 +46,35 @@ public class SensorReadingRepositoryTest {
         savedReading.setRelHumidity(newHumidityReading);
         sensorReadingRepository.save(savedReading);
 
-        assertThat(entityManager.find(SensorReading.class, savedReading.getSensorReadingId()).getTemperature()).isEqualTo(newTempReading);
-        assertThat(entityManager.find(SensorReading.class, savedReading.getSensorReadingId()).getRelHumidity()).isEqualTo(newHumidityReading);
+        assertThat(entityManager.find(SensorReading.class,
+                savedReading.getSensorReadingId()).getTemperature()).isEqualTo(newTempReading);
+        assertThat(entityManager.find(SensorReading.class,
+                savedReading.getSensorReadingId()).getRelHumidity()).isEqualTo(newHumidityReading);
 
         sensorReadingRepository.delete(savedReading);
         assertThat(entityManager.find(SensorReading.class, savedReading.getSensorReadingId())).isNull();
+    }
+
+    @Test
+    public void testSensorReadingRepositorySensorReadingNotNullAfterSensorDelete() {
+        final long sensorId = 2L;
+        final Sensor sensor = sensorRepository.getReferenceById(sensorId);
+        final SensorReading sensorReading = new SensorReading();
+        sensorReading.setTemperature(tempReading);
+        sensorReading.setRelHumidity(humidityReading);
+        sensorReading.setSensor(sensor);
+
+        SensorReading savedReading = entityManager.persistAndFlush(sensorReading);
+        assertThat(savedReading.getSensor().getPassKey()).isEqualTo("15961868");
+        assertThat(savedReading.getSensor()).isNotNull();
+        assertThat(entityManager.find(Sensor.class,
+                sensorRepository.getReferenceById(sensorId).getSensorId())).isNotNull();
+
+        sensorRepository.delete(sensor);
+        entityManager.refresh(savedReading);
+
+        assertThat(entityManager.find(Sensor.class,
+                sensorRepository.getReferenceById(sensorId).getSensorId())).isNull();
+        assertThat(savedReading.getSensorReadingId()).isNotNull();
     }
 }
