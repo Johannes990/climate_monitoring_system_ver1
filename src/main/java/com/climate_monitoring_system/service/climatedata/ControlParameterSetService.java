@@ -15,14 +15,26 @@ import java.util.Optional;
 public class ControlParameterSetService {
     private final ControlParameterSetRepository controlParameterSetRepository;
 
-    public ControlParameterSetDTO getControlParameterSetById(long id) {
+    public ControlParameterSetDTO getControlParameterSetDTOById(long id) {
         Optional<ControlParameterSet> controlParameterSet = controlParameterSetRepository.findById(id);
 
         return checkIfControlParameterSetPresentAndGetDTO(controlParameterSet);
     }
 
-    public List<ControlParameterSetDTO> getAllControlParameterSets() {
+    public ControlParameterSet getControlParameterSetById(long id) {
+        Optional<ControlParameterSet> controlParameterSet = controlParameterSetRepository.findById(id);
+
+        return controlParameterSet.orElseGet(ControlParameterSet::new);
+
+    }
+
+    public List<ControlParameterSetDTO> getAllControlParameterSetDTOs() {
         List<ControlParameterSet> controlParameterSets = controlParameterSetRepository.findAll();
+
+        return controlParametersToControlParameterDTOs(controlParameterSets);
+    }
+
+    private List<ControlParameterSetDTO> controlParametersToControlParameterDTOs(List<ControlParameterSet> controlParameterSets) {
         List<ControlParameterSetDTO> controlParameterSetDTOs = new ArrayList<>();
 
         for (ControlParameterSet controlParameterSet : controlParameterSets) {
@@ -36,7 +48,7 @@ public class ControlParameterSetService {
         return optionalSet.map(this::getControlParameterSetDTO).orElseGet(ControlParameterSetDTO::new);
     }
 
-    private ControlParameterSetDTO getControlParameterSetDTO(ControlParameterSet controlParameterSet) {
+    public ControlParameterSetDTO getControlParameterSetDTO(ControlParameterSet controlParameterSet) {
         ControlParameterSetDTO controlParameterSetDTO = new ControlParameterSetDTO();
         controlParameterSetDTO.setControlParameterSetId(controlParameterSet.getControlParameterSetId());
         controlParameterSetDTO.setTempNorm(controlParameterSet.getTempNorm());
