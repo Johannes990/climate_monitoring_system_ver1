@@ -1,7 +1,6 @@
 package com.climate_monitoring_system.controller.climatedata;
 
 import com.climate_monitoring_system.dto.climatedata.SensorDTO;
-import com.climate_monitoring_system.repository.climatedata.SensorRepository;
 import com.climate_monitoring_system.service.climatedata.SensorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
