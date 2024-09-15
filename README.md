@@ -150,4 +150,5 @@ as long as file names are also unique.
 
 
 ## check this out
-[https://www.youtube.com/watch?v=Z_4Tqmv8Oa4] - about next.js integration
+https://www.youtube.com/watch?v=Z_4Tqmv8Oa4 - about next.js integration
+https://learn.microsoft.com/en-us/sql/language-extensions/how-to/java-to-sql-data-types?view=sql-server-ver16 - SQL Server data type vs Java data type

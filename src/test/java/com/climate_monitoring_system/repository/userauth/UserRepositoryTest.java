@@ -24,6 +24,30 @@ public class UserRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    final long initialAccountCount = 4;
+    final List<String> actualNames = Arrays.asList(
+            "Johannes Jyrgenson",
+            "Mees Metsast",
+            "Naine Polvast",
+            "ahv 2"
+    );
+    final List<String> userNames = Arrays.asList(
+            "System Creator",
+            "Metsavaht",
+            "IWillWin",
+            "ahv2"
+    );
+    final List<String> emails = Arrays.asList(
+            "Johannes.Jyrgenson@Note-EMS.com",
+            "metsavaht@note-ems.com",
+            "winners@lost.com",
+            "vale@email.com"
+    );
+    final String email = "Johannes.Jyrgenson@Note-EMS.com";
+    final String firstName = "Johannes";
+    final String lastName = "Jyrgenson";
+    final String userName = "System Creator";
+
     @Test
     public void testUserRepositoryNotNull() {
         assertThat(userRepository).isNotNull();
@@ -31,26 +55,6 @@ public class UserRepositoryTest {
 
     @Test
     public void testUserRepositoryHoldsDefaultAccounts() {
-        final long initialAccountCount = 4;
-        final List<String> actualNames = Arrays.asList(
-                "Johannes Jyrgenson",
-                "Mees Metsast",
-                "Naine Polvast",
-                "ahv 2"
-        );
-        final List<String> userNames = Arrays.asList(
-                "System Creator",
-                "Metsavaht",
-                "IWillWin",
-                "ahv2"
-        );
-        final List<String> emails = Arrays.asList(
-                "Johannes.Jyrgenson@Note-EMS.com",
-                "metsavaht@note-ems.com",
-                "winners@lost.com",
-                "vale@email.com"
-        );
-
         List<AppUser> users = userRepository.findAll();
         assertThat(users.size()).isEqualTo(initialAccountCount);
 
@@ -64,67 +68,57 @@ public class UserRepositoryTest {
 
     @Test
     public void testUserRepositoryFindByEmail() {
-        final String email = "vale@email.com";
-        final String expectedFirstName = "ahv";
-        final String expectedLastName = "2";
-        final String expectedUserName = "ahv2";
-
         Optional<AppUser> optionalUser = userRepository.findByEmail(email);
         assertThat(optionalUser.isPresent()).isTrue();
 
         AppUser user = optionalUser.get();
-        assertThat(user.getFirstName()).isEqualTo(expectedFirstName);
-        assertThat(user.getLastName()).isEqualTo(expectedLastName);
-        assertThat(user.getUserName()).isEqualTo(expectedUserName);
+        assertThat(user.getFirstName()).isEqualTo(firstName);
+        assertThat(user.getLastName()).isEqualTo(lastName);
+        assertThat(user.getUserName()).isEqualTo(user);
     }
 
     @Test
     public void testUserRepositoryFindByUserName() {
-        final String userName = "System Creator";
-        final String expectedFirstName = "Johannes";
-        final String expectedLastName = "Jyrgenson";
-        final String expectedEmail = "Johannes.Jyrgenson@Note-EMS.com";
-
         Optional<AppUser> optionalUser = userRepository.findByUserName(userName);
         assertThat(optionalUser.isPresent()).isTrue();
 
         AppUser user = optionalUser.get();
-        assertThat(user.getFirstName()).isEqualTo(expectedFirstName);
-        assertThat(user.getLastName()).isEqualTo(expectedLastName);
-        assertThat(user.getEmail()).isEqualTo(expectedEmail);
+        assertThat(user.getFirstName()).isEqualTo(firstName);
+        assertThat(user.getLastName()).isEqualTo(lastName);
+        assertThat(user.getEmail()).isEqualTo(email);
     }
 
     @Test
     public void testUserRepositoryCrudOperations() {
-        final String firstName = "Andre";
-        final String lastName = "Cabanoss";
-        final String userName = "Spanish guy";
-        final String newUserName = "Hacker guy";
-        final String email = "Spanish@Spanish.com";
-        final String newEmail = "hacker@Spanish.com";
-        final String passwordHash = "Spanishwef984ewv654grv64";
+        final String createdFirstName = "Andre";
+        final String createdLastName = "Cabanoss";
+        final String createdUserName = "Spanish guy";
+        final String updatedUserName = "Hacker guy";
+        final String createdEmail = "Spanish@Spanish.com";
+        final String updatedEmail = "hacker@Spanish.com";
+        final String createdPasswordHash = "Spanishwef984ewv654grv64";
         final long viewOnlyAccountId = 3L;
 
         Account viewOnlyAccount = accountRepository.getReferenceById(viewOnlyAccountId);
         AppUser newUser = new AppUser();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setUserName(userName);
-        newUser.setEmail(email);
-        newUser.setPasswordHash(passwordHash);
+        newUser.setFirstName(createdFirstName);
+        newUser.setLastName(createdLastName);
+        newUser.setUserName(createdUserName);
+        newUser.setEmail(createdEmail);
+        newUser.setPasswordHash(createdPasswordHash);
         newUser.setAccountId(viewOnlyAccount);
 
         AppUser savedUser = entityManager.persistAndFlush(newUser);
         assertThat(savedUser.getUserId()).isNotNull();
 
-        savedUser.setEmail(newEmail);
-        savedUser.setUserName(newUserName);
+        savedUser.setEmail(updatedEmail);
+        savedUser.setUserName(updatedUserName);
 
         userRepository.save(savedUser);
         assertThat(entityManager.find(AppUser.class, savedUser.getUserId()).getUserName())
-                .isEqualTo(newUserName);
+                .isEqualTo(updatedUserName);
         assertThat(entityManager.find(AppUser.class, savedUser.getUserId()).getEmail())
-                .isEqualTo(newEmail);
+                .isEqualTo(updatedEmail);
 
         userRepository.delete(savedUser);
         assertThat(entityManager.find(AppUser.class, savedUser.getUserId())).isNull();
