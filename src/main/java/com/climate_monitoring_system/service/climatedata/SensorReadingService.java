@@ -25,6 +25,12 @@ public class SensorReadingService {
         return checkIfSensorReadingPresentGetDTO(sensorReading);
     }
 
+    public List<SensorReadingDTO> getAllSensorReadingDTOs() {
+        List<SensorReading> sensorReadings = sensorReadingRepository.findAll();
+
+        return sensorReadingsToSensorReadingDTOs(sensorReadings);
+    }
+
     public List<SensorReadingDTO> getReadingDTOsBySensorId(long sensorId) {
         Sensor sensor = sensorService.getSensorById(sensorId);
         Specification<SensorReading> spec = SensorReadingSpecification.hasSensor(sensor);
@@ -48,6 +54,11 @@ public class SensorReadingService {
 
     private List<SensorReadingDTO> getSensorDTOsBySpec(Specification<SensorReading> spec) {
         List<SensorReading> sensorReadings = sensorReadingRepository.findAll(spec);
+
+        return sensorReadingsToSensorReadingDTOs(sensorReadings);
+    }
+
+    private List<SensorReadingDTO> sensorReadingsToSensorReadingDTOs(List<SensorReading> sensorReadings) {
         List<SensorReadingDTO> sensorReadingDTOs = new ArrayList<>();
 
         for (SensorReading sensorReading : sensorReadings) {
