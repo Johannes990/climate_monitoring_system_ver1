@@ -23,6 +23,12 @@ public class SensorService {
         return checkIfSensorPresentAndGetSensorDTO(sensor);
     }
 
+    public Sensor getSensorById(long sensorId) {
+        Optional<Sensor> sensor = sensorRepository.findById(sensorId);
+
+        return sensor.orElseGet(Sensor::new);
+    }
+
     public List<SensorDTO> getAllSensorDTOs() {
         List<Sensor> sensors = sensorRepository.findAll();
 
