@@ -34,6 +34,23 @@ public class ControlParameterSetService {
         return controlParametersToControlParameterDTOs(controlParameterSets);
     }
 
+    public boolean addControlParameterSet(ControlParameterSetDTO controlParameterSetDTO) {
+        Optional<ControlParameterSet> possibleParameterSet = controlParameterSetRepository
+                .findById(controlParameterSetDTO.getControlParameterSetId());
+
+        if (possibleParameterSet.isEmpty()) {
+            ControlParameterSet controlParameterSet = new ControlParameterSet();
+            controlParameterSet.setTempNorm(controlParameterSetDTO.getTempNorm());
+            controlParameterSet.setTempTolerance(controlParameterSetDTO.getTempTolerance());
+            controlParameterSet.setRelHumidityNorm(controlParameterSetDTO.getRelHumidityNorm());
+            controlParameterSet.setRelHumidityTolerance(controlParameterSetDTO.getRelHumidityTolerance());
+            controlParameterSetRepository.save(controlParameterSet);
+            return true;
+        }
+
+        return false;
+    }
+
     private List<ControlParameterSetDTO> controlParametersToControlParameterDTOs(List<ControlParameterSet> controlParameterSets) {
         List<ControlParameterSetDTO> controlParameterSetDTOs = new ArrayList<>();
 
