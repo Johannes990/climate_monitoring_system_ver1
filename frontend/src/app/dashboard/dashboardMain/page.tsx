@@ -1,9 +1,9 @@
 "use client";
 
-import { getRequest} from "@/app/utils/api";
+import { getRequest } from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LOGIN_URL_PATH} from "@/app/utils/constants";
+import { LOGIN_URL_PATH } from "@/app/utils/constants";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);

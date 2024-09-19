@@ -2,7 +2,7 @@
 
 import  "../globals.css";
 import React, {useState} from "react";
-import {DASHBOARD_URL_PATH, LOGIN_URL_PATH} from "../utils/constants"
+import {DASHBOARD_CONTROLPARAM_URL_PATH, DASHBOARD_URL_PATH, LOGIN_URL_PATH} from "../utils/constants"
 import {getRequest} from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 
@@ -44,6 +44,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
                         <>
                             <div className="nav-links">
                                 <a href={DASHBOARD_URL_PATH} className="nav-link">Dashboard</a>
+                                <a href={DASHBOARD_CONTROLPARAM_URL_PATH} className="nav-link">Control Parameters</a>
                             </div>
                         </>
                         <>

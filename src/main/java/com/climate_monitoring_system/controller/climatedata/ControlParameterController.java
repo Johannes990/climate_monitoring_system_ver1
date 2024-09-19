@@ -3,10 +3,9 @@ package com.climate_monitoring_system.controller.climatedata;
 import com.climate_monitoring_system.dto.climatedata.ControlParameterSetDTO;
 import com.climate_monitoring_system.service.climatedata.ControlParameterSetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,15 @@ public class ControlParameterController {
         ControlParameterSetDTO controlParameterSetDTO = controlParameterSetService.getControlParameterSetDTOById(id);
 
         return ResponseEntity.ok(controlParameterSetDTO);
+    }
+
+    @PostMapping("/controlparams/add")
+    public ResponseEntity<String> addControlParameter(@RequestBody ControlParameterSetDTO controlParameterSetDTO) {
+        System.out.println(controlParameterSetDTO);
+        boolean controlParameterSetSaved = controlParameterSetService.addControlParameterSet(controlParameterSetDTO);
+        if (controlParameterSetSaved) {
+            return ResponseEntity.ok("Control parameter form submission successful");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter form submission failed");
     }
 }

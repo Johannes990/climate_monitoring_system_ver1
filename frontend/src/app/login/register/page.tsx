@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { RegisterDTO } from "../../dto/userauth/RegisterDTO";
 import { postRequest } from "@/app/utils/api";
-import {router} from "next/client";
+import { useRouter } from "next/navigation";
 import {LOGIN_URL_PATH} from "@/app/utils/constants";
 
 export default function Register() {
@@ -16,6 +16,7 @@ export default function Register() {
     });
     const [confirmPassword, setConfirmPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
