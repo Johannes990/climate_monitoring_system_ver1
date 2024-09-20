@@ -31,8 +31,7 @@ public class ControlParameterController {
 
     @DeleteMapping("/controlparams/delete/{id}")
     public ResponseEntity<String> deleteControlParameterById(@PathVariable int id) {
-        ControlParameterSetDTO controlParameterSetDTO = controlParameterSetService.getControlParameterSetDTOById(id);
-        boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSet(controlParameterSetDTO);
+        boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSetById(id);
 
         if (deleteSuccessful) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete Successful");

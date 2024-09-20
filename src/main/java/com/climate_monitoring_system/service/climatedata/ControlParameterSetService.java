@@ -51,12 +51,13 @@ public class ControlParameterSetService {
         return false;
     }
 
-    public boolean deleteControlParameterSet(ControlParameterSetDTO controlParameterSetDTO) {
+    public boolean deleteControlParameterSetById(long id) {
         Optional<ControlParameterSet> possibleParameterSet = controlParameterSetRepository
-                .findById(controlParameterSetDTO.getControlParameterSetId());
+                .findById(id);
 
         if (possibleParameterSet.isPresent()) {
-            controlParameterSetRepository.delete(possibleParameterSet.get());
+            ControlParameterSet parameterSet = possibleParameterSet.get();
+            controlParameterSetRepository.delete(parameterSet);
             return true;
         }
 
