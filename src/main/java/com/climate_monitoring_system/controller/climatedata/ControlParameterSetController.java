@@ -34,10 +34,10 @@ public class ControlParameterSetController {
         boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSetById(id);
 
         if (deleteSuccessful) {
-            return ResponseEntity.status(HttpStatus.OK).body("Control parameter delete Successful");
+            return ResponseEntity.status(HttpStatus.OK).body("Control parameter deleted Successfully");
         }
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter delete Failed");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter not deleted successfully");
     }
 
     @PostMapping("/controlparams/add")
