@@ -47,10 +47,10 @@ public class LocationController {
         boolean deleteSuccessful = locationService.deleteLocationById(id);
 
         if (deleteSuccessful) {
-            return ResponseEntity.status(HttpStatus.OK).body("Location delete successful");
+            return ResponseEntity.status(HttpStatus.OK).body("Location deleted successfully");
         }
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Location delete failed");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Location not deleted successfully");
     }
 
     @PostMapping("/locations/add")
