@@ -1,15 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { getRequest, postRequest, deleteRequest } from "@/app/utils/api";
 import { ControlParameterSetDTO } from "../../dto/climatedata/ControlParameterSetDTO";
-import {
-    CONTROL_PARAMS_ALL_QUERY_PATH,
-    CONTROL_PARAMS_ADD_QUERY_PATH,
-    CONTROL_PARAMS_DELETE_PATH,
-    initialControlParameterData
-} from "@/app/utils/constants";
 import {
     deleteControlParameterSet,
     fetchControlParameterData
