@@ -3,10 +3,9 @@ package com.climate_monitoring_system.controller.climatedata;
 import com.climate_monitoring_system.dto.climatedata.SensorDTO;
 import com.climate_monitoring_system.service.climatedata.SensorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,5 +55,27 @@ public class SensorController {
         List<SensorDTO> sensors = sensorService.getAllSensorDTOsByLocationIdAndDeviceCode(id, deviceCode);
 
         return ResponseEntity.ok(sensors);
+    }
+
+    @DeleteMapping("/sensors/delete/{id}")
+    public ResponseEntity<String> deleteSensorById(@PathVariable long id) {
+        boolean deleteSuccessful = sensorService.deleteSensorById(id);
+
+        if (deleteSuccessful) {
+            return ResponseEntity.status(HttpStatus.OK).body("Sensor deleted successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sensor not deleted successfully");
+    }
+
+    @PostMapping("/sensors/add")
+    public ResponseEntity<String> addSensor(@RequestBody SensorDTO sensorDTO) {
+        boolean addSuccessful = sensorService.addSensor(sensorDTO);
+
+        if (addSuccessful) {
+            return ResponseEntity.status(HttpStatus.OK).body("Sensor posted successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Sensor not posted successfully");
     }
 }

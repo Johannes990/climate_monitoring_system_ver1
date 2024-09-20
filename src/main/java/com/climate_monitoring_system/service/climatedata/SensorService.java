@@ -3,6 +3,7 @@ package com.climate_monitoring_system.service.climatedata;
 import com.climate_monitoring_system.domain.climatedata.Location;
 import com.climate_monitoring_system.domain.climatedata.Sensor;
 import com.climate_monitoring_system.dto.climatedata.SensorDTO;
+import com.climate_monitoring_system.repository.climatedata.LocationRepository;
 import com.climate_monitoring_system.repository.climatedata.SensorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class SensorService {
     private final SensorRepository sensorRepository;
     private final LocationService locationService;
+    private final LocationRepository locationRepository;
 
     public SensorDTO getSensorDTOById(long sensorId) {
         Optional<Sensor> sensor = sensorRepository.findById(sensorId);
@@ -59,6 +61,37 @@ public class SensorService {
         List<Sensor> sensors = sensorRepository.findAllByLocationAndDeviceCode(location, deviceCode);
 
         return sensorsToSensorDTOs(sensors);
+    }
+
+    public boolean deleteSensorById(long sensorId) {
+        Optional<Sensor> sensor = sensorRepository.findById(sensorId);
+
+        if (sensor.isPresent()) {
+            Sensor sensorToDelete = sensor.get();
+            sensorRepository.delete(sensorToDelete);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean addSensor(SensorDTO sensorDTO) {
+        Optional<Sensor> possibleSensor = sensorRepository.findById(sensorDTO.getSensorId());
+        long locationId = sensorDTO.getLocation().getLocationId();
+        Optional<Location> possibleLocation = locationRepository.findById(locationId);
+
+        if (possibleSensor.isEmpty() && possibleLocation.isPresent()) {
+            Sensor sensor = new Sensor();
+            Location location = possibleLocation.get();
+            sensor.setPassKey(sensorDTO.getPassKey());
+            sensor.setDeviceCode(sensorDTO.getDeviceCode());
+            sensor.setTempUnit(sensorDTO.getTempUnit());
+            sensor.setLocation(location);
+            sensorRepository.save(sensor);
+            return true;
+        }
+
+        return false;
     }
 
     private List<SensorDTO> sensorsToSensorDTOs(List<Sensor> sensors) {
