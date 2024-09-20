@@ -1,9 +1,14 @@
 "use client";
 
 import  "../globals.css";
-import React, {useState} from "react";
-import {DASHBOARD_CONTROLPARAM_URL_PATH, DASHBOARD_URL_PATH, LOGIN_URL_PATH} from "../utils/constants"
-import {getRequest} from "@/app/utils/api";
+import React, { useState } from "react";
+import {
+    DASHBOARD_CONTROLPARAM_URL_PATH,
+    DASHBOARD_URL_PATH,
+    LOGIN_URL_PATH,
+    LOGOUT_QUERY_PATH
+} from "../utils/constants"
+import { getRequest } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 
 export default function LoginLayout({ children }: { children: React.ReactNode}) {
@@ -12,7 +17,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
 
     async function logout() {
         try {
-            const response = await getRequest("/logout");
+            const response = await getRequest(LOGOUT_QUERY_PATH);
 
             if (response.ok) {
                 router.push(LOGIN_URL_PATH);
