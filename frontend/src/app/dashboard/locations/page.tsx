@@ -82,7 +82,7 @@ export default function Locations() {
                 </div>
 
 
-                <LocationForm onSuccess={fetchData}/>
+                <LocationForm onSuccess={fetchData} />
 
                 <form onSubmit={handleDeleteSubmit} className="space-y-4">
                     <h2 className="text-xl font-semibold">Delete An Existing Location</h2>

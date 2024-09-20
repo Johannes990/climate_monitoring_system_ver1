@@ -11,7 +11,7 @@ interface LocationFormProps {
 const LocationForm: React.FC<LocationFormProps> = ({onSuccess}) => {
     const [formData, setFormData] = useState<LocationDTO>(newLocation());
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string>("");
     const [controlParameterSetId, setControlParameterSetId] = useState<string>("");
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +28,7 @@ const LocationForm: React.FC<LocationFormProps> = ({onSuccess}) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
+        setError("");
         setLoading(true);
 
         try {
@@ -58,7 +58,7 @@ const LocationForm: React.FC<LocationFormProps> = ({onSuccess}) => {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <h2 className="text-xl funt-semibold">Create a New Location</h2>
+            <h2 className="text-xl font-semibold">Create a New Location</h2>
 
             <div className="space-y-2">
                 <label htmlFor="locationDescription" className="block text-sm font-medium capitalize">
