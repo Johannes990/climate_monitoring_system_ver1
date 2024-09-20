@@ -2,6 +2,7 @@ import {ControlParameterSetDTO} from "@/app/dto/climatedata/ControlParameterSetD
 import {LocationDTO} from "@/app/dto/climatedata/LocationDTO";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
 import {SensorReadingDTO} from "@/app/dto/climatedata/SensorReadingDTO";
+import {getRequest} from "@/app/utils/api";
 
 
 export function newControlParameterSet(): ControlParameterSetDTO {
@@ -40,4 +41,14 @@ export function newSensorReading(): SensorReadingDTO {
         readingTime: undefined,
         sensor: newSensor(),
     };
+}
+
+export async function fetchData(queryPath: string, errorMsg: string) {
+    const response = await getRequest(queryPath);
+
+    if (response.ok) {
+        return response.json()
+    }
+
+    throw new Error(errorMsg);
 }

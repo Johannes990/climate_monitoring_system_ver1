@@ -1,7 +1,4 @@
 // frontend URL routing paths
-import {ControlParameterSetDTO} from "@/app/dto/climatedata/ControlParameterSetDTO";
-import {LocationDTO} from "@/app/dto/climatedata/LocationDTO";
-
 export const BASE_LOGIN_PATH = "/login/"
 export const LOGIN_URL_PATH = BASE_LOGIN_PATH + "login";
 export const REGISTER_URL_PATH = BASE_LOGIN_PATH + "register";
@@ -26,17 +23,3 @@ export const LOCATIONS_ALL_QUERY_PATH = LOCATIONS_QUERY_PATH + "all";
 export const LOCATIONS_BY_DESCRIPTION_CONTAINING_QUERY_PATH = LOCATIONS_QUERY_PATH + "bydescriptioncontaining/";
 export const LOCATIONS_DELETE_QUERY_PATH = LOCATIONS_QUERY_PATH + "delete/";
 export const LOCATIONS_ADD_QUERY_PATH = LOCATIONS_QUERY_PATH + "add";
-
-// other constant values used in frontend object initialization
-export const initialControlParameterData: ControlParameterSetDTO = {
-    controlParameterSetId: undefined,
-    tempNorm: 0.0,
-    tempTolerance: 0.0,
-    relHumidityNorm: 0.0,
-    relHumidityTolerance: 0.0,
-};
-export const initialLocationData: LocationDTO = {
-    locationId: undefined,
-    locationDescription: "",
-    controlParameterSet: initialControlParameterData,
-};

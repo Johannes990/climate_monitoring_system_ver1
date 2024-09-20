@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import {ControlParameterSetDTO} from "@/app/dto/climatedata/ControlParameterSetDTO";
-import {newControlParameterSet} from "@/app/utils/functions";
-import {createControlParameterSet} from "@/app/dashboard/controlParameters/ControlParameterSetService";
+import React, { useState } from "react";
+import { ControlParameterSetDTO } from "@/app/dto/climatedata/ControlParameterSetDTO";
+import { newControlParameterSet } from "@/app/utils/functions";
+import { createControlParameterSet } from "@/app/dashboard/controlParameters/ControlParameterSetService";
 
 interface ControlParameterSetFormProps {
     onSuccess: () => void; // this callback triggers when form submission is a success
