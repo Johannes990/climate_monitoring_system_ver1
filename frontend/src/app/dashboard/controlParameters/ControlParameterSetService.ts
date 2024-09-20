@@ -1,5 +1,5 @@
 import { ControlParameterSetDTO } from "@/app/dto/climatedata/ControlParameterSetDTO";
-import { deleteRequest, getRequest, postRequest } from "@/app/utils/api";
+import { deleteRequest, postRequest } from "@/app/utils/api";
 import {
     CONTROL_PARAMS_ADD_QUERY_PATH,
     CONTROL_PARAMS_ALL_QUERY_PATH,
