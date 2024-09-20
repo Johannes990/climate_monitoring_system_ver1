@@ -41,3 +41,20 @@ export async function getRequest(url: string): Promise<Response> {
         throw error;
     }
 }
+
+export async function deleteRequest(url: string): Promise<Response> {
+    try {
+        console.log(`${API_URL}${url}`)
+
+        return await fetch(`${API_URL}${url}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } catch (error) {
+        console.error("API delete request error:", error);
+        throw error;
+    }
+}
