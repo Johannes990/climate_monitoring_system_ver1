@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ControlParameterSetDTO } from "../../dto/climatedata/ControlParameterSetDTO";
 import {
     deleteControlParameterSet,
-    fetchControlParameterData
+    fetchAllControlParameters
 } from "@/app/dashboard/controlParameters/ControlParameterSetService";
 import ControlParameterSetForm from "@/app/dashboard/controlParameters/ControlParameterSetForm";
 
@@ -16,7 +16,7 @@ export default function ControlParameters() {
 
     const fetchData = useCallback(async () => {
         try {
-            const data = await fetchControlParameterData();
+            const data = await fetchAllControlParameters();
             setControlParameterData(data);
         } catch (err) {
             setError("Failed to fetch control parameter data.");
