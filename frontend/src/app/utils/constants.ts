@@ -2,10 +2,13 @@
 import {ControlParameterSetDTO} from "@/app/dto/climatedata/ControlParameterSetDTO";
 import {LocationDTO} from "@/app/dto/climatedata/LocationDTO";
 
-export const LOGIN_URL_PATH = "/login/login";
-export const REGISTER_URL_PATH = "/login/register";
-export const DASHBOARD_URL_PATH = "/dashboard/dashboardMain";
-export const DASHBOARD_CONTROLPARAM_URL_PATH = "/dashboard/controlParameters";
+export const BASE_LOGIN_PATH = "/login/"
+export const LOGIN_URL_PATH = BASE_LOGIN_PATH + "login";
+export const REGISTER_URL_PATH = BASE_LOGIN_PATH + "register";
+export const BASE_DASHBOARD_PATH = "/dashboard/"
+export const DASHBOARD_URL_PATH = BASE_DASHBOARD_PATH + "dashboardMain";
+export const DASHBOARD_CONTROLPARAM_URL_PATH = BASE_DASHBOARD_PATH + "controlParameters";
+export const DASHBOARD_LOCATIONS_URL_PATH = BASE_DASHBOARD_PATH + "locations"
 
 //backend API request paths
 export const LOGIN_QUERY_PATH = "/login";

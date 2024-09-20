@@ -3,7 +3,7 @@
 import  "../globals.css";
 import React, { useState } from "react";
 import {
-    DASHBOARD_CONTROLPARAM_URL_PATH,
+    DASHBOARD_CONTROLPARAM_URL_PATH, DASHBOARD_LOCATIONS_URL_PATH,
     DASHBOARD_URL_PATH,
     LOGIN_URL_PATH,
     LOGOUT_QUERY_PATH
@@ -50,6 +50,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
                             <div className="nav-links">
                                 <a href={DASHBOARD_URL_PATH} className="nav-link">Dashboard</a>
                                 <a href={DASHBOARD_CONTROLPARAM_URL_PATH} className="nav-link">Control Parameters</a>
+                                <a href={DASHBOARD_LOCATIONS_URL_PATH} className="nav-link">Locations</a>
                             </div>
                         </>
                         <>
