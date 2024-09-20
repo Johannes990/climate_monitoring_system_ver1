@@ -29,13 +29,27 @@ public class ControlParameterController {
         return ResponseEntity.ok(controlParameterSetDTO);
     }
 
+    @DeleteMapping("/controlparams/delete/{id}")
+    public ResponseEntity<String> deleteControlParameterById(@PathVariable int id) {
+        ControlParameterSetDTO controlParameterSetDTO = controlParameterSetService.getControlParameterSetDTOById(id);
+        boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSet(controlParameterSetDTO);
+
+        if (deleteSuccessful) {
+            return ResponseEntity.status(HttpStatus.OK).body("Delete Successful");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Delete Failed");
+    }
+
     @PostMapping("/controlparams/add")
     public ResponseEntity<String> addControlParameter(@RequestBody ControlParameterSetDTO controlParameterSetDTO) {
         System.out.println(controlParameterSetDTO);
         boolean controlParameterSetSaved = controlParameterSetService.addControlParameterSet(controlParameterSetDTO);
+
         if (controlParameterSetSaved) {
             return ResponseEntity.ok("Control parameter form submission successful");
         }
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter form submission failed");
     }
 }

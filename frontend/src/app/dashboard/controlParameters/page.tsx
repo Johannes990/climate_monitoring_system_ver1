@@ -1,9 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
-import { getRequest, postRequest } from "@/app/utils/api";
+import { useEffect, useState } from "react";
+import { getRequest, postRequest, deleteRequest } from "@/app/utils/api";
 import { ControlParameterSetDTO } from "../../dto/climatedata/ControlParameterSetDTO";
+import {
+    CONTROL_PARAMS_ALL_QUERY_PATH,
+    CONTROL_PARAMS_ADD_QUERY_PATH,
+    CONTROL_PARAMS_DELETE_PATH,
+} from "@/app/utils/constants";
 
 const initialControlParameterData: ControlParameterSetDTO = {
     controlParameterSetId: undefined,
@@ -14,6 +19,7 @@ const initialControlParameterData: ControlParameterSetDTO = {
 };
 
 export default function ControlParameters() {
+    const [controlParameterDeleteId, setControlParameterDeleteId] = useState<number>();
     const [controlParameterData, setControlParameterData] = useState<ControlParameterSetDTO[]>([]);
     const [newControlParameterSet, setNewControlParameterSet] =
         useState<ControlParameterSetDTO>(initialControlParameterData);
@@ -22,7 +28,7 @@ export default function ControlParameters() {
     console.log(JSON.stringify(newControlParameterSet));
 
     const fetchControlParameterData = async () => {
-        const response = await getRequest("/controlparams/all");
+        const response = await getRequest(CONTROL_PARAMS_ALL_QUERY_PATH);
         try {
             if (response.ok) {
                 const data = await response.json();
@@ -37,7 +43,7 @@ export default function ControlParameters() {
         fetchControlParameterData();
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Parameter set form submitted");
 
@@ -50,16 +56,45 @@ export default function ControlParameters() {
         };
 
         try {
-            await postRequest("/controlparams/add", parsedParameterSetData);
+            await postRequest(CONTROL_PARAMS_ADD_QUERY_PATH, parsedParameterSetData);
             setNewControlParameterSet(initialControlParameterData);
-            fetchControlParameterData();
+            await fetchControlParameterData();
             router.refresh();
         } catch (error) {
             console.error("Error submitting form:", error);
         }
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleDeleteSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const confirmed = window.confirm(`Are you sure you want to delete the " +
+        "control parameter set with ID: ${controlParameterDeleteId}?`);
+        if (!confirmed) {
+            return;
+        }
+
+        console.log("Deletion of id:" + controlParameterDeleteId + " submitted");
+
+        try {
+            await deleteRequest(CONTROL_PARAMS_DELETE_PATH + controlParameterDeleteId);
+            setControlParameterDeleteId(0);
+            await fetchControlParameterData();
+            router.refresh();
+        } catch (error) {
+            console.error(
+                "Error deleting control parameter sed id " + controlParameterDeleteId + " :",
+                error
+            );
+        }
+    }
+
+    const handleDeleteIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        setControlParameterDeleteId(parseInt(val));
+    }
+
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setNewControlParameterSet({
             ...newControlParameterSet,
@@ -96,8 +131,8 @@ export default function ControlParameters() {
                 </table>
 
                 {/* Form to create a new control parameter set to be saved in the system */}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <h2 className="text-xl font-semibold">Create A New ControlParameter Set</h2>
+                <form onSubmit={handleFormSubmit} className="space-y-4">
+                    <h2 className="text-xl font-semibold">Create A New Control Parameter Set</h2>
 
                     <div className="space-y-2">
                         <label htmlFor="tempNorm" className="block text-sm font-medium">
@@ -108,7 +143,7 @@ export default function ControlParameters() {
                             id="tempNorm"
                             name="tempNorm"
                             value={newControlParameterSet.tempNorm}
-                            onChange={handleChange}
+                            onChange={handleFormChange}
                             className="w-full px-3 py-2 border rounded"
                             required
                         />
@@ -122,7 +157,7 @@ export default function ControlParameters() {
                             id="tempTolerance"
                             name="tempTolerance"
                             value={newControlParameterSet.tempTolerance}
-                            onChange={handleChange}
+                            onChange={handleFormChange}
                             className="w-full px-3 py-2 border rounded"
                             required
                         />
@@ -136,7 +171,7 @@ export default function ControlParameters() {
                             id="relHumidityNorm"
                             name="relHumidityNorm"
                             value={newControlParameterSet.relHumidityNorm}
-                            onChange={handleChange}
+                            onChange={handleFormChange}
                             className="w-full px-3 py-2 border rounded"
                             required
                         />
@@ -150,13 +185,35 @@ export default function ControlParameters() {
                             id="relHumidityTolerance"
                             name="relHumidityTolerance"
                             value={newControlParameterSet.relHumidityTolerance}
-                            onChange={handleChange}
+                            onChange={handleFormChange}
                             className="w-full px-3 py-2 border rounded"
                             required
                         />
                     </div>
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded">
                         Save
+                    </button>
+                </form>
+
+                <form onSubmit={handleDeleteSubmit} className="space-y-4">
+                    <h2 className="text-xl font-semibold">Delete An Existing Control Parameter Set</h2>
+
+                    <div className="space-y-2">
+                        <label htmlFor="controlParameterDeleteId" className="block text-sm font-medium">
+                            Delete ID
+                        </label>
+                        <input
+                            type="number"
+                            id="controlParameterDeleteId"
+                            name="controlParameterDeleteId"
+                            value={controlParameterDeleteId}
+                            onChange={handleDeleteIdChange}
+                            className="w-full px-3 py-2 border rounded"
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-red-500 rounded">
+                        Delete
                     </button>
                 </form>
             </div>
