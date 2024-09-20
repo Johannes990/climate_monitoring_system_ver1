@@ -2,7 +2,6 @@ package com.climate_monitoring_system.service.climatedata;
 
 import com.climate_monitoring_system.domain.climatedata.ControlParameterSet;
 import com.climate_monitoring_system.domain.climatedata.Location;
-import com.climate_monitoring_system.dto.climatedata.ControlParameterSetDTO;
 import com.climate_monitoring_system.dto.climatedata.LocationDTO;
 import com.climate_monitoring_system.repository.climatedata.ControlParameterSetRepository;
 import com.climate_monitoring_system.repository.climatedata.LocationRepository;
