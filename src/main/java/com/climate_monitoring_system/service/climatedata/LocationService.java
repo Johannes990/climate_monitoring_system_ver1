@@ -3,6 +3,7 @@ package com.climate_monitoring_system.service.climatedata;
 import com.climate_monitoring_system.domain.climatedata.ControlParameterSet;
 import com.climate_monitoring_system.domain.climatedata.Location;
 import com.climate_monitoring_system.dto.climatedata.LocationDTO;
+import com.climate_monitoring_system.repository.climatedata.ControlParameterSetRepository;
 import com.climate_monitoring_system.repository.climatedata.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class LocationService {
     private final LocationRepository locationRepository;
     private final ControlParameterSetService controlParameterSetService;
+    private final ControlParameterSetRepository controlParameterSetRepository;
 
     public LocationDTO getLocationDTOById(long id) {
         Optional<Location> location = locationRepository.findById(id);
@@ -53,6 +55,35 @@ public class LocationService {
         List<Location> locations = locationRepository.findAllByControlParameterSet(controlParameterSet);
 
         return locationsToLocationDTOs(locations);
+    }
+
+    public boolean addLocation(LocationDTO locationDTO) {
+        Optional<Location> possibleLocation = locationRepository.findById(locationDTO.getLocationId());
+        long parameterSetId = locationDTO.getControlParameterSet().getControlParameterSetId();
+        Optional<ControlParameterSet> possibleParameterSet = controlParameterSetRepository.findById(parameterSetId);
+
+        if (possibleLocation.isEmpty() && possibleParameterSet.isPresent()) {
+            Location location = new Location();
+            ControlParameterSet parameterSet = possibleParameterSet.get();
+            location.setLocationDescription(locationDTO.getLocationDescription());
+            location.setControlParameterSet(parameterSet);
+            locationRepository.save(location);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean deleteLocationById(long id) {
+        Optional<Location> possibleLocation = locationRepository.findById(id);
+
+        if (possibleLocation.isPresent()) {
+            Location location = possibleLocation.get();
+            locationRepository.delete(location);
+            return true;
+        }
+
+        return false;
     }
 
     private List<LocationDTO> locationsToLocationDTOs(List<Location> location) {

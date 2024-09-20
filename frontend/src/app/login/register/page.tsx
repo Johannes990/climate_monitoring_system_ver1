@@ -4,7 +4,10 @@ import { useState } from "react";
 import { RegisterDTO } from "../../dto/userauth/RegisterDTO";
 import { postRequest } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
-import {LOGIN_URL_PATH} from "@/app/utils/constants";
+import {
+    LOGIN_URL_PATH,
+    REGISTER_QUERY_PATH
+} from "@/app/utils/constants";
 
 export default function Register() {
     const [registerFormData, setRegisterFormData] = useState<RegisterDTO>({
@@ -37,7 +40,7 @@ export default function Register() {
         console.log("Sending registration data to the backend: ", registerFormData);
 
         try {
-            const response = await postRequest("/register", registerFormData);
+            const response = await postRequest(REGISTER_QUERY_PATH, registerFormData);
 
             if (response.ok) {
                 const responseBody = await response.text();

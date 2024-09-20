@@ -3,7 +3,10 @@
 import { getRequest } from "@/app/utils/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LOGIN_URL_PATH } from "@/app/utils/constants";
+import {
+    LOGIN_URL_PATH,
+    PROTECTED_QUERY_PATH,
+} from "@/app/utils/constants";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -13,7 +16,7 @@ export default function Dashboard() {
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
-                const response = await getRequest("/protected")
+                const response = await getRequest(PROTECTED_QUERY_PATH);
 
                 console.log("Protected endpoint response:", response.status);
 

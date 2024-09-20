@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { LoginDTO } from "../../dto/userauth/loginDTO";
 import { useState } from "react";
 import { postRequest } from "@/app/utils/api";
-import {DASHBOARD_URL_PATH, REGISTER_URL_PATH} from "@/app/utils/constants";
+import {
+    DASHBOARD_URL_PATH,
+    REGISTER_URL_PATH,
+    LOGIN_QUERY_PATH
+} from "@/app/utils/constants";
 
 export default function Login() {
     const [loginFormData, setLoginFormData] = useState<LoginDTO>({
@@ -27,7 +31,7 @@ export default function Login() {
         console.log("Login form submitted");
 
         try {
-            const response = await postRequest("/login", loginFormData);
+            const response = await postRequest(LOGIN_QUERY_PATH, loginFormData);
 
             if (response.ok) {
                 const responseBody = await response.text();

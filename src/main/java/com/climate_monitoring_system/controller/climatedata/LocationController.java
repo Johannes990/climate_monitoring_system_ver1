@@ -3,10 +3,9 @@ package com.climate_monitoring_system.controller.climatedata;
 import com.climate_monitoring_system.dto.climatedata.LocationDTO;
 import com.climate_monitoring_system.service.climatedata.LocationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,5 +40,27 @@ public class LocationController {
         List<LocationDTO> locations = locationService.getAllLocationDTOsByDescriptionContaining(description);
 
         return ResponseEntity.ok(locations);
+    }
+
+    @DeleteMapping("/locations/delete/{id}")
+    public ResponseEntity<String> deleteLocation(@PathVariable int id) {
+        boolean deleteSuccessful = locationService.deleteLocationById(id);
+
+        if (deleteSuccessful) {
+            return ResponseEntity.status(HttpStatus.OK).body("Location delete successful");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Location delete failed");
+    }
+
+    @PostMapping("/locations/add")
+    public ResponseEntity<String> addLocation(@RequestBody LocationDTO location) {
+        boolean addSuccessful = locationService.addLocation(location);
+
+        if (addSuccessful) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Location posted successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Location not posted successfully");
     }
 }

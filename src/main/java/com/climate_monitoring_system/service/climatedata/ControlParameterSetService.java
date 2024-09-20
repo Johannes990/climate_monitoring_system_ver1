@@ -51,6 +51,19 @@ public class ControlParameterSetService {
         return false;
     }
 
+    public boolean deleteControlParameterSetById(long id) {
+        Optional<ControlParameterSet> possibleParameterSet = controlParameterSetRepository
+                .findById(id);
+
+        if (possibleParameterSet.isPresent()) {
+            ControlParameterSet parameterSet = possibleParameterSet.get();
+            controlParameterSetRepository.delete(parameterSet);
+            return true;
+        }
+
+        return false;
+    }
+
     private List<ControlParameterSetDTO> controlParametersToControlParameterDTOs(List<ControlParameterSet> controlParameterSets) {
         List<ControlParameterSetDTO> controlParameterSetDTOs = new ArrayList<>();
 

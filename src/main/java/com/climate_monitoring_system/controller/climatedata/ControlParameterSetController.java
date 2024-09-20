@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class ControlParameterController {
+public class ControlParameterSetController {
     private final ControlParameterSetService controlParameterSetService;
 
     @GetMapping("/controlparams/all")
@@ -29,13 +29,26 @@ public class ControlParameterController {
         return ResponseEntity.ok(controlParameterSetDTO);
     }
 
+    @DeleteMapping("/controlparams/delete/{id}")
+    public ResponseEntity<String> deleteControlParameterById(@PathVariable int id) {
+        boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSetById(id);
+
+        if (deleteSuccessful) {
+            return ResponseEntity.status(HttpStatus.OK).body("Control parameter delete Successful");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter delete Failed");
+    }
+
     @PostMapping("/controlparams/add")
     public ResponseEntity<String> addControlParameter(@RequestBody ControlParameterSetDTO controlParameterSetDTO) {
-        System.out.println(controlParameterSetDTO);
         boolean controlParameterSetSaved = controlParameterSetService.addControlParameterSet(controlParameterSetDTO);
+
         if (controlParameterSetSaved) {
-            return ResponseEntity.ok("Control parameter form submission successful");
+            return ResponseEntity.ok("Control parameter set posted successfully");
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter form submission failed");
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Control parameter set not posted successfully");
     }
 }
