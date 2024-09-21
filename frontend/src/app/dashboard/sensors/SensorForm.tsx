@@ -1,125 +1,60 @@
 import React, {useState} from "react";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
 import {newSensor} from "@/app/utils/functions";
-import {LocationDTO} from "@/app/dto/climatedata/LocationDTO";
 import {createSensor, fetchLocationById} from "@/app/dashboard/sensors/SensorService";
+import {useForm} from "@/app/dashboard/components/form/useForm";
+import FormField from "@/app/dashboard/components/form/FormField";
 
 interface SensorFormProps {
     onSuccess: () => void;
 }
 
 const SensorForm: React.FC<SensorFormProps> = ({onSuccess}) => {
-    const [formData, setFormData] = useState<SensorDTO>(newSensor());
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    const { formData, handleInputChange, handleSubmit, loading, error } = useForm<SensorDTO>(newSensor());
     const [locationId, setLocationId] = useState<string>("");
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
 
     const handleLocationIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLocationId(e.target.value);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+    const onSubmit = async (parsedData: SensorDTO) => {
+        const location = await fetchLocationById(locationId);
 
-        try {
-            const location: LocationDTO | null =
-                await fetchLocationById(locationId);
+        if (!location) throw new Error("Location not found");
 
-            console.log("Location:",location);
+        await createSensor({ ...parsedData, location });
+        onSuccess();
+    };
 
-            if (!location) return;
-
-            console.log("made it past location null check");
-
-            const parsedData: SensorDTO = {
-                ...formData,
-                location
-            };
-
-            console.log("parsed data set");
-
-            await createSensor(parsedData);
-            setFormData(newSensor());
-            setLocationId("");
-            onSuccess();
-        } catch (err) {
-            setError("Failed to save sensor");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <h2 className="text-xl font-semibold">Create a New Sensor</h2>
 
-            <div className="space-y-2">
-                <label htmlFor="passKey" className="block text-sm font-medium capitalize">
-                    Sensor PassKey
-                </label>
-                <input
-                    type="text"
-                    id="passKey"
-                    name="passKey"
-                    value={formData.passKey}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
-            <div className="space-y-2">
-                <label htmlFor="deviceCode" className="block text-sm font-medium capitalize">
-                    Sensor Device Code
-                </label>
-                <input
-                    type="text"
-                    id="deviceCode"
-                    name="deviceCode"
-                    value={formData.deviceCode}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
-            <div className="space-y-2">
-                <label htmlFor="tempUnit" className="block text-sm font-medium capitalize">
-                    Sensor Temp Unit
-                </label>
-                <input
-                    type="text"
-                    id="tempUnit"
-                    name="tempUnit"
-                    value={formData.tempUnit}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
-            <div className="space-y-2">
-                <label htmlFor="location" className="block text-sm font-medium capitalize">
-                    Sensor Location
-                </label>
-                <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={locationId}
-                    onChange={handleLocationIdChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
+            <FormField
+                id="passKey"
+                label="Sensor PassKey"
+                value={formData.passKey}
+                onChange={handleInputChange}
+            />
+            <FormField
+                id="deviceCode"
+                label="Sensor Device Code"
+                value={formData.deviceCode}
+                onChange={handleInputChange}
+            />
+            <FormField
+                id="tempUnit"
+                label="Sensor Temp Unit"
+                value={formData.tempUnit}
+                onChange={handleInputChange}
+            />
+            <FormField
+                id="locationId"
+                label="Location ID"
+                value={locationId}
+                onChange={handleLocationIdChange}
+            />
 
             {error && <p className="text-red-500">{error}</p>}
 
