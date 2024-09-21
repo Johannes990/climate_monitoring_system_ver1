@@ -1,68 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import { ControlParameterSetDTO } from "@/app/dto/climatedata/ControlParameterSetDTO";
 import { newControlParameterSet } from "@/app/utils/functions";
 import { createControlParameterSet } from "@/app/dashboard/controlParameters/ControlParameterSetService";
+import {useForm} from "@/app/dashboard/components/form/useForm";
+import FormField from "@/app/dashboard/components/form/FormField";
 
 interface ControlParameterSetFormProps {
     onSuccess: () => void; // this callback triggers when form submission is a success
 }
 
 const ControlParameterSetForm: React.FC<ControlParameterSetFormProps> = ({ onSuccess }) => {
-    const [formData, setFormData] = useState<ControlParameterSetDTO>(newControlParameterSet());
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const { formData, handleInputChange, handleSubmit, loading, error } =
+        useForm<ControlParameterSetDTO>(newControlParameterSet());
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+    const onSubmit = async (parsedData: ControlParameterSetDTO) => {
+        const normalizedData = {
+            ...parsedData,
+            tempNorm: Number(parsedData.tempNorm),
+            tempTolerance: Number(parsedData.tempTolerance),
+            relHumidityNorm: Number(parsedData.relHumidityNorm),
+            relHumidityTolerance: Number(parsedData.relHumidityTolerance),
+        };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        setLoading(true);
-
-        try {
-            const parsedData = {
-                ...formData,
-                tempNorm: Number(formData.tempNorm),
-                tempTolerance: Number(formData.tempTolerance),
-                relHumidityNorm: Number(formData.relHumidityNorm),
-                relHumidityTolerance: Number(formData.relHumidityTolerance),
-            };
-            await createControlParameterSet(parsedData);
-            setFormData(newControlParameterSet());
-            onSuccess();
-        } catch (err) {
-            setError("Failed to save control parameter set.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        await createControlParameterSet(normalizedData);
+        onSuccess();
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <h2 className="text-xl funt-semibold">Create a New Control Parameter Set</h2>
 
             {["tempNorm", "tempTolerance", "relHumidityNorm", "relHumidityTolerance"].map((field, idx) => (
-                <div key={idx} className="space-y-2">
-                    <label htmlFor={field} className="block text-sm font-medium capitalize">
-                        {field.replace(/([A-Z])/g, ' $1')}
-                    </label>
-                    <input
-                        type="number"
-                        id={field}
-                        name={field}
-                        value={formData[field as keyof ControlParameterSetDTO]}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border rounded"
-                        required
-                    />
-                </div>
+                <FormField
+                    key={idx}
+                    id={field}
+                    label={field.replace(/([A-Z])/g, ' $1')}
+                    value={formData[field as keyof ControlParameterSetDTO] ?? ""}
+                    onChange={handleInputChange}
+                    type="number"
+                />
             ))}
 
             {error && <p className="text-red-500">{error}</p>}
