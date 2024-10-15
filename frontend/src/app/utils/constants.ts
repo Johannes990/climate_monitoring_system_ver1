@@ -7,6 +7,7 @@ export const DASHBOARD_URL_PATH = BASE_DASHBOARD_PATH + "dashboardMain";
 export const DASHBOARD_CONTROLPARAM_URL_PATH = BASE_DASHBOARD_PATH + "controlParameters";
 export const DASHBOARD_LOCATIONS_URL_PATH = BASE_DASHBOARD_PATH + "locations";
 export const DASHBOARD_SENSORS_URL_PATH = BASE_DASHBOARD_PATH + "sensors";
+export const DASHBOARD_SENSOR_READINGS_URL_PATH = BASE_DASHBOARD_PATH + "readings";
 
 //backend API request paths
 export const LOGIN_QUERY_PATH = "/login";
@@ -32,3 +33,7 @@ export const SENSORS_BY_LOCATION_QUERY_PATH = SENSORS_QUERY_PATH + "bylocation/"
 export const SENSORS_BY_DEVICECODE_QUERY_PATH = SENSORS_QUERY_PATH + "bydevicecode/";
 export const SENSORS_ADD_QUERY_PATH = SENSORS_QUERY_PATH + "add";
 export const SENSORS_DELETE_QUERY_PATH = SENSORS_QUERY_PATH + "delete/";
+
+export const READINGS_QUERY_PATH = "/readings/";
+export const READINGS_ALL_QUERY_PATH = READINGS_QUERY_PATH + "all";
+export const READINGS_BY_SENSOR_QUERY_PATH = READINGS_QUERY_PATH + "bysensor/";
