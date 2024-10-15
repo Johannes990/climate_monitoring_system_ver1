@@ -12,7 +12,6 @@ import {
     Filler,
     BarElement,
     ArcElement,
-    ArcOptions
 } from "chart.js";
 
 ChartJS.register(
@@ -28,7 +27,7 @@ ChartJS.register(
     ArcElement,
 );
 
-import {Bar, Line, Scatter, Bubble, Doughnut} from "react-chartjs-2";
+import {Bar, Line, Doughnut} from "react-chartjs-2";
 import React, {useCallback, useEffect, useState} from "react";
 import {SensorReadingDTO} from "@/app/dto/climatedata/SensorReadingDTO";
 import {fetchAllReadings} from "@/app/dashboard/readings/ReadingsService";
