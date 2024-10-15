@@ -36,6 +36,8 @@ import {fetchAllReadings} from "@/app/dashboard/readings/ReadingsService";
 export default function Readings() {
     const [readings, setReadings] = useState<SensorReadingDTO[]>([]);
     const [error, setError] = useState<string>("");
+    const [times, setTimes] = useState<Date[]>([]);
+    const [readingVals, setReadingVals] = useState<number[]>([]);
 
     // testing data for ChartJs / react-chartjs-2
     const lineData = {
@@ -85,7 +87,7 @@ export default function Readings() {
                     "#00BB88",
                     "#00DD44",
                 ],
-                hoverOffset: 30,
+                hoverOffset: 18,
             },
         ],
     };
@@ -94,20 +96,20 @@ export default function Readings() {
     const lineOptions = {
         plugins: {
             legend: {
-                display: false,
+                display: true,
             },
         },
         elements: {
             line: {
                 tension: 0.5,
-                borderWidth: 5,
+                borderWidth: 1,
                 borderColor: "#",
                 fill: "start",
                 backgroundColor: "#F0F0F0"
             },
             point: {
-                radius: 0,
-                hitRadius: 0,
+                radius: 5,
+                hitRadius: 5,
             },
         },
         scales: {
@@ -171,11 +173,29 @@ export default function Readings() {
         try {
             const data = await fetchAllReadings();
             setReadings(data);
+            var timeStamps = [];
+            var readingData = [];
+            for (var i = 0; i < data.length; i++) {
+                readingData.push(data[i].temperature);
+                timeStamps.push(data[i].readingTime);
+            }
+            setTimes(timeStamps);
+            setReadingVals(readingData);
         } catch (err) {
-            setError("Failed to fetch all readings.");
+            setError("Failed to fetch all readings." + err);
             console.error(err);
         }
     }, []);
+
+    const sensorsData = {
+        labels: times,
+        datasets: [
+            {
+                label: "sensor data",
+                data: readingVals,
+            },
+        ],
+    };
 
     useEffect(() => {
         window.history.replaceState(null, "", window.location.href);
@@ -184,11 +204,15 @@ export default function Readings() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
-            <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded shadow-md">
+            <div className="w-full max-w-2xl p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Sensor Readings</h1>
+
+                {error && <p className="text-red-500">{error}</p>}
+
                 <Line data={lineData} options={lineOptions} />
                 <Bar data={barData} options={barOptions} />
                 <Doughnut data={doughnutData} options={doughnutOptions} />
+                <Line data={sensorsData} options={lineOptions} />
             </div>
         </main>
     )

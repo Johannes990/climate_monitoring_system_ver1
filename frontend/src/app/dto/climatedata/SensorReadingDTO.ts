@@ -5,6 +5,6 @@ export interface SensorReadingDTO {
     sensorReadingId?: number;
     temperature: number;
     relHumidity: number;
-    readingTime?: Date;
+    readingTime: Date;
     sensor: SensorDTO;
 }
