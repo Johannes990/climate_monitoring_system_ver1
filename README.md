@@ -153,3 +153,9 @@ as long as file names are also unique.
 https://www.youtube.com/watch?v=Z_4Tqmv8Oa4 - about next.js integration
 <br/>
 https://learn.microsoft.com/en-us/sql/language-extensions/how-to/java-to-sql-data-types?view=sql-server-ver16 - SQL Server data type vs Java data type
+
+
+## Frontend stuff
+currently to display data as charts, it is necessary to install
+- chart.js (4.4.3 version) ```npm i chart.js@4.4.3```
+- react-chartjs-2 (version at time of install 5.2.0) ```npm i react-chartjs-2```

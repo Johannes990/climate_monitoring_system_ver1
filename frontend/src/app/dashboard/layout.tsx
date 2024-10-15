@@ -3,7 +3,10 @@
 import  "../globals.css";
 import React, { useState } from "react";
 import {
-    DASHBOARD_CONTROLPARAM_URL_PATH, DASHBOARD_LOCATIONS_URL_PATH, DASHBOARD_SENSORS_URL_PATH,
+    DASHBOARD_CONTROLPARAM_URL_PATH,
+    DASHBOARD_LOCATIONS_URL_PATH,
+    DASHBOARD_SENSOR_READINGS_URL_PATH,
+    DASHBOARD_SENSORS_URL_PATH,
     DASHBOARD_URL_PATH,
     LOGIN_URL_PATH,
     LOGOUT_QUERY_PATH
@@ -20,6 +23,10 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
             const response = await getRequest(LOGOUT_QUERY_PATH);
 
             if (response.ok) {
+                sessionStorage.removeItem("userSession");
+                console.log("user session removed from session storage");
+                localStorage.removeItem("userToken");
+                console.log("user token removed from local storage");
                 router.push(LOGIN_URL_PATH);
             } else {
                 setErrorMessage("Logout failed!");
@@ -52,6 +59,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
                                 <a href={DASHBOARD_CONTROLPARAM_URL_PATH} className="nav-link">Control Parameters</a>
                                 <a href={DASHBOARD_LOCATIONS_URL_PATH} className="nav-link">Locations</a>
                                 <a href={DASHBOARD_SENSORS_URL_PATH} className="nav-link">Sensors</a>
+                                <a href={DASHBOARD_SENSOR_READINGS_URL_PATH} className="nav-link">Sensor Readings</a>
                             </div>
                         </>
                         <>
