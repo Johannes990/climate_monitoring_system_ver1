@@ -30,7 +30,7 @@ export async function fetchSensorsByDeviceCode(deviceCode: string): Promise<Sens
 export async function fetchSensorsByLocationId(locationId: string): Promise<SensorDTO[]> {
     return fetchData(
         `${SENSORS_BY_LOCATION_QUERY_PATH}${locationId}`,
-        `Failed to fetch sensord by location id: ${locationId}`
+        `Failed to fetch sensor by location id: ${locationId}`
     );
 }
 
