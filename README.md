@@ -159,3 +159,4 @@ https://learn.microsoft.com/en-us/sql/language-extensions/how-to/java-to-sql-dat
 currently to display data as charts, it is necessary to install
 - chart.js (4.4.3 version) ```npm i chart.js@4.4.3```
 - react-chartjs-2 (version at time of install 5.2.0) ```npm i react-chartjs-2```
+- chart.js annotation plugin for limits on graphs ```npm i chartjs-plugin-annotation```
