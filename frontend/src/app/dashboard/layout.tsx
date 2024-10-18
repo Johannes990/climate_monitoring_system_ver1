@@ -52,9 +52,18 @@ export default function LoginLayout({ children }: { children: React.ReactNode}) 
         <div>
             <nav>
                 <div className="navbar">
-                    <div className="navbar-container">
+                    <div className="navbar-container flex items-center justify-between">
                         <>
-                            <div className="nav-links">
+                            <div className="logo">
+                                <a href={DASHBOARD_URL_PATH}>
+                                    <img
+                                        src="/assets/NOTE-AB.png"
+                                        alt="Company logo"
+                                        className="h-16 w-auto"
+                                    />
+                                </a>
+                            </div>
+                            <div className="nav-links flex space-x-4">
                                 <a href={DASHBOARD_URL_PATH} className="nav-link">Dashboard</a>
                                 <a href={DASHBOARD_CONTROLPARAM_URL_PATH} className="nav-link">Control Parameters</a>
                                 <a href={DASHBOARD_LOCATIONS_URL_PATH} className="nav-link">Locations</a>
