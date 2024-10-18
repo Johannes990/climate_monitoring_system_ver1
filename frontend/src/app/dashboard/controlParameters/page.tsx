@@ -25,6 +25,7 @@ export default function ControlParameters() {
     }, []);
 
     useEffect(() => {
+        window.history.replaceState(null, "", window.location.href);
         fetchData();
     }, [fetchData]);
 

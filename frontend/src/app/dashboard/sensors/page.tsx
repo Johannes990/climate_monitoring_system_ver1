@@ -21,6 +21,7 @@ export default function Sensors() {
     }, []);
 
     useEffect(() => {
+        window.history.replaceState(null, "", window.location.href);
         fetchData();
     }, [fetchData]);
 

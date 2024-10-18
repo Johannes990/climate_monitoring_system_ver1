@@ -14,6 +14,7 @@ export default function Dashboard() {
     const router = useRouter();
 
     useEffect(() => {
+        window.history.replaceState(null, "", window.location.href);
         const checkAuthentication = async () => {
             try {
                 const response = await getRequest(PROTECTED_QUERY_PATH);
