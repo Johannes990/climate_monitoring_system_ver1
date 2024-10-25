@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!--file includes must follow a particular order-->
+    <!--in particular, tables referred to by foreign keys must exist before key creation-->
+    <include file="db/changelog/notification/schema/01_create_schema_notification.sql"/>
+    <include file="db/changelog/notification/tables/02_create_table_notificationtype.sql"/>
+    <include file="db/changelog/notification/tables/03_create_table_action.sql"/>
+    <include file="db/changelog/notification/tables/04_create_table_notification.sql"/>
+    <include file="db/changelog/notification/triggers/01_create_trigger_checkconditionsselfresolved.sql"/>
+
+</databaseChangeLog>
