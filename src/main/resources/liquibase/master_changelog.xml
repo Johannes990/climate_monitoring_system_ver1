@@ -7,5 +7,4 @@
     <include file="/db/changelog/climatedata/climatedata_changelog.xml"/>
     <include file="/db/changelog/userauth/userauth_changelog.xml"/>
     <include file="/db/changelog/notification/notification_changelog.xml"/>
-
 </databaseChangeLog>
