@@ -5,11 +5,15 @@ import com.climate_monitoring_system.dto.userauth.RegisterDTO;
 import com.climate_monitoring_system.dto.userauth.UserDTO;
 import com.climate_monitoring_system.service.userauth.AuthenticationService;
 import com.climate_monitoring_system.service.userauth.AppUserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,11 +36,21 @@ public class AuthenticationController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logoutUser(HttpServletRequest request) {
+    public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
+
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(10);
+        response.addCookie(cookie);
+
         return ResponseEntity.ok("Logout Successful!");
     }
 
