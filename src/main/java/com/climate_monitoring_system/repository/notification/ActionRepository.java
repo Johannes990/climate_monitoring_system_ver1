@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface ActionRepository extends JpaRepository<Action, Integer> {
+public interface ActionRepository extends JpaRepository<Action, Long> {
     List<Action> findAllByUser(AppUser user);
     List<Action> findAllByTimestampAfter(Timestamp timestamp);
     List<Action> findAllByTimestampBefore(Timestamp timestamp);

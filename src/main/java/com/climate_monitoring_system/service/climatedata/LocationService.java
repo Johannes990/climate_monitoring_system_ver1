@@ -78,8 +78,7 @@ public class LocationService {
         Optional<Location> possibleLocation = locationRepository.findById(id);
 
         if (possibleLocation.isPresent()) {
-            Location location = possibleLocation.get();
-            locationRepository.delete(location);
+            locationRepository.deleteById(id);
             return true;
         }
 

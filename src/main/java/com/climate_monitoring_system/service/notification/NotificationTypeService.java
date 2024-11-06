@@ -33,7 +33,7 @@ public class NotificationTypeService {
         return notificationTypeDTOs;
     }
 
-    private NotificationTypeDTO getNotificationTypeDTO(NotificationType notificationType) {
+    public NotificationTypeDTO getNotificationTypeDTO(NotificationType notificationType) {
         NotificationTypeDTO notificationTypeDTO = new NotificationTypeDTO();
         notificationTypeDTO.setNotificationTypeId(
                 notificationType.getNotificationTypeId()
@@ -43,5 +43,31 @@ public class NotificationTypeService {
         );
 
         return notificationTypeDTO;
+    }
+
+    public boolean addNotificationType(NotificationTypeDTO notificationTypeDTO) {
+        Optional<NotificationType> optionalNotificationType = notificationTypeRepository
+                .findByNotificationTypeDescription(notificationTypeDTO.getNotificationTypeDescription());
+
+        if (optionalNotificationType.isPresent()) {
+            NotificationType notificationType = new NotificationType();
+            notificationType.setNotificationTypeDescription(notificationTypeDTO
+                    .getNotificationTypeDescription());
+            notificationTypeRepository.save(notificationType);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean deleteNotificationType(long id) {
+        Optional<NotificationType> optionalNotificationType = notificationTypeRepository.findById(id);
+
+        if (optionalNotificationType.isPresent()) {
+            notificationTypeRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 }

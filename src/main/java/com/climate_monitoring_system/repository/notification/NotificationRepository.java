@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByNotificationType(NotificationType notificationType);
     List<Notification> findAllBySensor(Sensor sensor);
     List<Notification> findAllByUserActionTaken(Boolean userActionTaken);

@@ -49,7 +49,7 @@ public class AppUserService {
         return newDTO;
     }
 
-    private UserDTO makeUserDTO(AppUser user) {
+    public UserDTO makeUserDTO(AppUser user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
         userDTO.setFirstName(user.getFirstName());
