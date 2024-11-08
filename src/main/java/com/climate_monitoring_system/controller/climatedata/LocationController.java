@@ -17,28 +17,24 @@ public class LocationController {
     @GetMapping("/locations/{id}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable int id) {
         LocationDTO location = locationService.getLocationDTOById(id);
-
         return ResponseEntity.ok(location);
     }
 
     @GetMapping("locations/all")
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
         List<LocationDTO> locations = locationService.getAllLocationDTOs();
-
         return ResponseEntity.ok(locations);
     }
 
     @GetMapping("/locations/bydescriptionprecise/{description}")
     public ResponseEntity<LocationDTO> getLocationByDescriptionPrecise(@PathVariable String description) {
         LocationDTO location = locationService.getLocationDTOByDescription(description);
-
         return ResponseEntity.ok(location);
     }
 
     @GetMapping("/locations/bydescriptioncontaining/{description}")
     public ResponseEntity<List<LocationDTO>> getLocationByDescriptionContaining(@PathVariable String description) {
         List<LocationDTO> locations = locationService.getAllLocationDTOsByDescriptionContaining(description);
-
         return ResponseEntity.ok(locations);
     }
 

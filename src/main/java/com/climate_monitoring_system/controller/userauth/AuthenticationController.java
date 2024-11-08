@@ -30,38 +30,38 @@ public class AuthenticationController {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", loginDTO.getEmail());
             return ResponseEntity.ok("Login Successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
     }
 
     @GetMapping("/logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
+
         if (session != null) {
             session.invalidate();
         }
 
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(10);
         response.addCookie(cookie);
-
         return ResponseEntity.ok("Logout Successful!");
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO registerDTO) {
         boolean registrationSuccess = authenticationService.registerUser(registerDTO);
+
         if (registrationSuccess) {
             return ResponseEntity.ok("Registration Successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration Failed!!");
         }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration Failed!!");
     }
 
     @GetMapping("/users")
@@ -75,8 +75,8 @@ public class AuthenticationController {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             return ResponseEntity.ok("Access to protected resources granted!");
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to protected resources denied!");
         }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to protected resources denied!");
     }
 }

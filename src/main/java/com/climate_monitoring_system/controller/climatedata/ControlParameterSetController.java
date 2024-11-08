@@ -18,14 +18,12 @@ public class ControlParameterSetController {
     public ResponseEntity<List<ControlParameterSetDTO>> getAllControlParameters() {
         List<ControlParameterSetDTO> controlParameterSetDTOS = controlParameterSetService
                 .getAllControlParameterSetDTOs();
-
         return ResponseEntity.ok(controlParameterSetDTOS);
     }
 
     @GetMapping("/controlparams/{id}")
     public ResponseEntity<ControlParameterSetDTO> getControlParameterById(@PathVariable int id) {
         ControlParameterSetDTO controlParameterSetDTO = controlParameterSetService.getControlParameterSetDTOById(id);
-
         return ResponseEntity.ok(controlParameterSetDTO);
     }
 

@@ -18,21 +18,18 @@ public class SensorReadingController {
     @GetMapping("/readings/{id}")
     public ResponseEntity<SensorReadingDTO> getSensorReadingById(@PathVariable int id) {
         SensorReadingDTO reading = sensorReadingService.getSensorReadingDTOById(id);
-
         return ResponseEntity.ok(reading);
     }
 
     @GetMapping("/readings/all")
     public ResponseEntity<List<SensorReadingDTO>> getAllSensorReadings() {
         List<SensorReadingDTO> readings = sensorReadingService.getAllSensorReadingDTOs();
-
         return ResponseEntity.ok(readings);
     }
 
     @GetMapping("/readings/bysensor/{sensorId}")
     public ResponseEntity<List<SensorReadingDTO>> getAllSensorReadingsBySensorId(@PathVariable int sensorId) {
         List<SensorReadingDTO> readings = sensorReadingService.getReadingDTOsBySensorId(sensorId);
-
         return ResponseEntity.ok(readings);
     }
 }
