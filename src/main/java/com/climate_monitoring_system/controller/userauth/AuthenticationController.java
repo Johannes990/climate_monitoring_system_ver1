@@ -18,65 +18,67 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.climate_monitoring_system.controller.Paths.*;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AppUserService appUserService;
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN_QUERY_PATH)
     public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         if (authenticationService.loginUser(loginDTO)) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", loginDTO.getEmail());
             return ResponseEntity.ok("Login Successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
         }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
     }
 
-    @GetMapping("/logout")
+    @GetMapping(LOGOUT_QUERY_PATH)
     public ResponseEntity<String> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
+
         if (session != null) {
             session.invalidate();
         }
 
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(10);
         response.addCookie(cookie);
-
         return ResponseEntity.ok("Logout Successful!");
     }
 
-    @PostMapping("/register")
+    @PostMapping(REGISTER_QUERY_PATH)
     public ResponseEntity<String> registerUser(@RequestBody RegisterDTO registerDTO) {
         boolean registrationSuccess = authenticationService.registerUser(registerDTO);
+
         if (registrationSuccess) {
             return ResponseEntity.ok("Registration Successful!");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration Failed!!");
         }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration Failed!!");
     }
 
-    @GetMapping("/users")
+    @GetMapping(USERS_QUERY_PATH)
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<UserDTO> foundUsers = appUserService.findAll();
         return ResponseEntity.ok(foundUsers);
     }
 
-    @GetMapping("/protected")
+    @GetMapping(PROTECTED_QUERY_PATH)
     public ResponseEntity<String> protectedResource(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
             return ResponseEntity.ok("Access to protected resources granted!");
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to protected resources denied!");
         }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access to protected resources denied!");
     }
 }

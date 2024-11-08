@@ -21,13 +21,11 @@ public class SensorReadingService {
 
     public SensorReadingDTO getSensorReadingDTOById(long id) {
         Optional<SensorReading> sensorReading = sensorReadingRepository.findById(id);
-
         return checkIfSensorReadingPresentGetDTO(sensorReading);
     }
 
     public List<SensorReadingDTO> getAllSensorReadingDTOs() {
         List<SensorReading> sensorReadings = sensorReadingRepository.findAll();
-
         return sensorReadingsToSensorReadingDTOs(sensorReadings);
     }
 
@@ -48,13 +46,11 @@ public class SensorReadingService {
         sensorReadingDTO.setRelHumidity(sensorReading.getRelHumidity());
         sensorReadingDTO.setReadingTime(sensorReading.getReadingTime());
         sensorReadingDTO.setSensor(sensorService.getSensorDTO(sensorReading.getSensor()));
-
         return sensorReadingDTO;
     }
 
     private List<SensorReadingDTO> getSensorDTOsBySpec(Specification<SensorReading> spec) {
         List<SensorReading> sensorReadings = sensorReadingRepository.findAll(spec);
-
         return sensorReadingsToSensorReadingDTOs(sensorReadings);
     }
 

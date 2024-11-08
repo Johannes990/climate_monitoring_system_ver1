@@ -21,45 +21,38 @@ public class SensorService {
 
     public SensorDTO getSensorDTOById(long sensorId) {
         Optional<Sensor> sensor = sensorRepository.findById(sensorId);
-
         return checkIfSensorPresentAndGetSensorDTO(sensor);
     }
 
     public Sensor getSensorById(long sensorId) {
         Optional<Sensor> sensor = sensorRepository.findById(sensorId);
-
         return sensor.orElseGet(Sensor::new);
     }
 
     public List<SensorDTO> getAllSensorDTOs() {
         List<Sensor> sensors = sensorRepository.findAll();
-
         return sensorsToSensorDTOs(sensors);
     }
 
     public SensorDTO getSensorDTOByPassKey(String passKey) {
         Optional<Sensor> sensor = sensorRepository.findByPassKey(passKey);
-
         return checkIfSensorPresentAndGetSensorDTO(sensor);
     }
 
     public List<SensorDTO> getAllSensorDTOsByLocationId(long id) {
         Location location = locationService.getLocationById(id);
         List<Sensor> sensors = sensorRepository.findAllByLocation(location);
-
         return sensorsToSensorDTOs(sensors);
     }
 
     public List<SensorDTO> getAllSensorDTOsByDeviceCode(String deviceCode) {
         List<Sensor> sensors = sensorRepository.findAllByDeviceCode(deviceCode);
-
         return sensorsToSensorDTOs(sensors);
     }
 
     public List<SensorDTO> getAllSensorDTOsByLocationIdAndDeviceCode(long locationId, String deviceCode) {
         Location location = locationService.getLocationById(locationId);
         List<Sensor> sensors = sensorRepository.findAllByLocationAndDeviceCode(location, deviceCode);
-
         return sensorsToSensorDTOs(sensors);
     }
 
@@ -115,7 +108,6 @@ public class SensorService {
         sensorDTO.setDeviceCode(sensor.getDeviceCode());
         sensorDTO.setTempUnit(sensor.getTempUnit());
         sensorDTO.setLocation(locationService.getLocationDTO(sensor.getLocation()));
-
         return sensorDTO;
     }
 }

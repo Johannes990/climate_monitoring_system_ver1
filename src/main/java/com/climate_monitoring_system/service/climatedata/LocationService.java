@@ -21,39 +21,33 @@ public class LocationService {
 
     public LocationDTO getLocationDTOById(long id) {
         Optional<Location> location = locationRepository.findById(id);
-
         return checkIfLocationPresentAndGetLocationDTO(location);
     }
 
     public Location getLocationById(long id) {
         Optional<Location> location = locationRepository.findById(id);
-
         return location.orElseGet(Location::new);
 
     }
 
     public List<LocationDTO> getAllLocationDTOs() {
         List<Location> locations = locationRepository.findAll();
-
         return locationsToLocationDTOs(locations);
     }
 
     public LocationDTO getLocationDTOByDescription(String description) {
         Optional<Location> optionalLocation = locationRepository.findByLocationDescription(description);
-
         return checkIfLocationPresentAndGetLocationDTO(optionalLocation);
     }
 
     public List<LocationDTO> getAllLocationDTOsByDescriptionContaining(String description) {
         List<Location> locationsByDescription = locationRepository.findAllByLocationDescriptionContaining(description);
-
         return locationsToLocationDTOs(locationsByDescription);
     }
 
     public List<LocationDTO> getAllLocationDTOsByControlParameterSetId(long id) {
         ControlParameterSet controlParameterSet = controlParameterSetService.getControlParameterSetById(id);
         List<Location> locations = locationRepository.findAllByControlParameterSet(controlParameterSet);
-
         return locationsToLocationDTOs(locations);
     }
 
@@ -78,8 +72,7 @@ public class LocationService {
         Optional<Location> possibleLocation = locationRepository.findById(id);
 
         if (possibleLocation.isPresent()) {
-            Location location = possibleLocation.get();
-            locationRepository.delete(location);
+            locationRepository.deleteById(id);
             return true;
         }
 
@@ -106,7 +99,6 @@ public class LocationService {
         locationDTO.setLocationDescription(location.getLocationDescription());
         locationDTO.setControlParameterSet(controlParameterSetService
                 .getControlParameterSetDTO(location.getControlParameterSet()));
-
         return locationDTO;
     }
 }
