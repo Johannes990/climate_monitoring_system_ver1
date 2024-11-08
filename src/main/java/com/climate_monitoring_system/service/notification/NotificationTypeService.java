@@ -21,6 +21,11 @@ public class NotificationTypeService {
                 .orElseGet(NotificationTypeDTO::new);
     }
 
+    public NotificationType getNotificationTypeById(long id) {
+        Optional<NotificationType> notificationType = notificationTypeRepository.findById(id);
+        return notificationType.orElseGet(NotificationType::new);
+    }
+
     public List<NotificationTypeDTO> getAllNotificationTypeDTOs() {
         List<NotificationType> notificationTypes = notificationTypeRepository.findAll();
         List<NotificationTypeDTO> notificationTypeDTOs = new ArrayList<>();

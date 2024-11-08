@@ -9,26 +9,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.climate_monitoring_system.controller.Paths.*;
+
 @RestController
 @RequiredArgsConstructor
 public class NotificationTypeController {
     private final NotificationTypeService notificationTypeService;
 
-    @GetMapping("/notificationtypes/{id}")
+    @GetMapping(NOTIFICATION_TYPES_QUERY_PATH + "{id}")
     public ResponseEntity<NotificationTypeDTO> getNotificationTypeById(@PathVariable int id) {
         NotificationTypeDTO notificationTypeDTO = notificationTypeService.getNotificationTypeDTOById(id);
 
         return ResponseEntity.ok(notificationTypeDTO);
     }
 
-    @GetMapping("/notificationtypes/all")
+    @GetMapping(NOTIFICATION_TYPES_ALL_QUERY_PATH)
     public ResponseEntity<List<NotificationTypeDTO>> getAllNotificationTypes() {
         List<NotificationTypeDTO> allNotificationTypes = notificationTypeService.getAllNotificationTypeDTOs();
 
         return ResponseEntity.ok(allNotificationTypes);
     }
 
-    @PostMapping("/notificationtypes/add")
+    @PostMapping(NOTIFICATION_TYPES_ADD_QUERY_PATH)
     public ResponseEntity<String> addNotificationType(@RequestBody NotificationTypeDTO notificationTypeDTO) {
         boolean notificationTypeSaved = notificationTypeService.addNotificationType(notificationTypeDTO);
 
@@ -40,7 +42,7 @@ public class NotificationTypeController {
                 .body("Failed to post notification type");
     }
 
-    @DeleteMapping("/notificationtypes/delete/{id}")
+    @DeleteMapping(NOTIFICATION_TYPES_DELETE_QUERY_PATH + "{id}")
     public ResponseEntity<String> deleteNotificationType(@PathVariable int id) {
         boolean notificationDeleted = notificationTypeService.deleteNotificationType(id);
 
