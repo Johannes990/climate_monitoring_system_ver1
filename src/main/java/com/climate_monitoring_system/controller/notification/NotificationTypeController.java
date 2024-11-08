@@ -18,21 +18,26 @@ public class NotificationTypeController {
 
     @GetMapping(NOTIFICATION_TYPES_QUERY_PATH + "{id}")
     public ResponseEntity<NotificationTypeDTO> getNotificationTypeById(@PathVariable int id) {
-        NotificationTypeDTO notificationTypeDTO = notificationTypeService.getNotificationTypeDTOById(id);
+        NotificationTypeDTO notificationTypeDTO = notificationTypeService
+                .getNotificationTypeDTOById(id);
 
         return ResponseEntity.ok(notificationTypeDTO);
     }
 
     @GetMapping(NOTIFICATION_TYPES_ALL_QUERY_PATH)
     public ResponseEntity<List<NotificationTypeDTO>> getAllNotificationTypes() {
-        List<NotificationTypeDTO> allNotificationTypes = notificationTypeService.getAllNotificationTypeDTOs();
+        List<NotificationTypeDTO> allNotificationTypes = notificationTypeService
+                .getAllNotificationTypeDTOs();
 
         return ResponseEntity.ok(allNotificationTypes);
     }
 
     @PostMapping(NOTIFICATION_TYPES_ADD_QUERY_PATH)
-    public ResponseEntity<String> addNotificationType(@RequestBody NotificationTypeDTO notificationTypeDTO) {
-        boolean notificationTypeSaved = notificationTypeService.addNotificationType(notificationTypeDTO);
+    public ResponseEntity<String> addNotificationType(
+            @RequestBody NotificationTypeDTO notificationTypeDTO
+    ) {
+        boolean notificationTypeSaved = notificationTypeService
+                .addNotificationType(notificationTypeDTO);
 
         if (notificationTypeSaved) {
             return ResponseEntity.ok("Notification type posted successfully");
