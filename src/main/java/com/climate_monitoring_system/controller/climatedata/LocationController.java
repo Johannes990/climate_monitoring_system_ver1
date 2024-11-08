@@ -9,36 +9,38 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.climate_monitoring_system.controller.Paths.*;
+
 @RestController
 @RequiredArgsConstructor
 public class LocationController {
     private final LocationService locationService;
 
-    @GetMapping("/locations/{id}")
+    @GetMapping(LOCATIONS_QUERY_PATH + "{id}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable int id) {
         LocationDTO location = locationService.getLocationDTOById(id);
         return ResponseEntity.ok(location);
     }
 
-    @GetMapping("locations/all")
+    @GetMapping(LOCATIONS_ALL_QUERY_PATH)
     public ResponseEntity<List<LocationDTO>> getAllLocations() {
         List<LocationDTO> locations = locationService.getAllLocationDTOs();
         return ResponseEntity.ok(locations);
     }
 
-    @GetMapping("/locations/bydescriptionprecise/{description}")
+    @GetMapping(LOCATIONS_BY_DESCRIPTION_PRECISE_QUERY_PATH + "{description}")
     public ResponseEntity<LocationDTO> getLocationByDescriptionPrecise(@PathVariable String description) {
         LocationDTO location = locationService.getLocationDTOByDescription(description);
         return ResponseEntity.ok(location);
     }
 
-    @GetMapping("/locations/bydescriptioncontaining/{description}")
+    @GetMapping(LOCATIONS_BY_DESCRIPTION_CONTAINING_QUERY_PATH + "{description}")
     public ResponseEntity<List<LocationDTO>> getLocationByDescriptionContaining(@PathVariable String description) {
         List<LocationDTO> locations = locationService.getAllLocationDTOsByDescriptionContaining(description);
         return ResponseEntity.ok(locations);
     }
 
-    @DeleteMapping("/locations/delete/{id}")
+    @DeleteMapping(LOCATIONS_DELETE_QUERY_PATH + "{id}")
     public ResponseEntity<String> deleteLocation(@PathVariable int id) {
         boolean deleteSuccessful = locationService.deleteLocationById(id);
 
@@ -49,7 +51,7 @@ public class LocationController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Location not deleted successfully");
     }
 
-    @PostMapping("/locations/add")
+    @PostMapping(LOCATIONS_ADD_QUERY_PATH)
     public ResponseEntity<String> addLocation(@RequestBody LocationDTO location) {
         boolean addSuccessful = locationService.addLocation(location);
 

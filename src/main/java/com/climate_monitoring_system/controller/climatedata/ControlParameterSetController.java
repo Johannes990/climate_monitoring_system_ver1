@@ -9,25 +9,27 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.climate_monitoring_system.controller.Paths.*;
+
 @RestController
 @RequiredArgsConstructor
 public class ControlParameterSetController {
     private final ControlParameterSetService controlParameterSetService;
 
-    @GetMapping("/controlparams/all")
+    @GetMapping(CONTROL_PARAMS_ALL_QUERY_PATH)
     public ResponseEntity<List<ControlParameterSetDTO>> getAllControlParameters() {
         List<ControlParameterSetDTO> controlParameterSetDTOS = controlParameterSetService
                 .getAllControlParameterSetDTOs();
         return ResponseEntity.ok(controlParameterSetDTOS);
     }
 
-    @GetMapping("/controlparams/{id}")
+    @GetMapping(CONTROL_PARAMS_QUERY_PATH + "{id}")
     public ResponseEntity<ControlParameterSetDTO> getControlParameterById(@PathVariable int id) {
         ControlParameterSetDTO controlParameterSetDTO = controlParameterSetService.getControlParameterSetDTOById(id);
         return ResponseEntity.ok(controlParameterSetDTO);
     }
 
-    @DeleteMapping("/controlparams/delete/{id}")
+    @DeleteMapping(CONTROL_PARAMS_DELETE_PATH + "{id}")
     public ResponseEntity<String> deleteControlParameterById(@PathVariable int id) {
         boolean deleteSuccessful = controlParameterSetService.deleteControlParameterSetById(id);
 
@@ -38,7 +40,7 @@ public class ControlParameterSetController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Control parameter not deleted successfully");
     }
 
-    @PostMapping("/controlparams/add")
+    @PostMapping(CONTROL_PARAMS_ADD_QUERY_PATH)
     public ResponseEntity<String> addControlParameter(@RequestBody ControlParameterSetDTO controlParameterSetDTO) {
         boolean controlParameterSetSaved = controlParameterSetService.addControlParameterSet(controlParameterSetDTO);
 
