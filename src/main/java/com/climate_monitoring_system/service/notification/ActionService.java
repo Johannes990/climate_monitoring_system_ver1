@@ -1,9 +1,11 @@
 package com.climate_monitoring_system.service.notification;
 
 import com.climate_monitoring_system.domain.notification.Action;
+import com.climate_monitoring_system.domain.notification.Notification;
 import com.climate_monitoring_system.domain.userauth.AppUser;
 import com.climate_monitoring_system.dto.notification.ActionDTO;
 import com.climate_monitoring_system.repository.notification.ActionRepository;
+import com.climate_monitoring_system.repository.notification.NotificationRepository;
 import com.climate_monitoring_system.repository.userauth.UserRepository;
 import com.climate_monitoring_system.service.userauth.AppUserService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,41 @@ public class ActionService {
     private final ActionRepository actionRepository;
     private final AppUserService appUserService;
     private final UserRepository userRepository;
+    private final NotificationRepository notifcationRepository;
+    private final NotificationRepository notificationRepository;
 
     public ActionDTO getActionDTOById(long id) {
         Optional<Action> optionalAction = actionRepository.findById(id);
         return optionalAction.map(this::actionToActionDTO).orElseGet(ActionDTO::new);
+    }
+
+    public boolean addAction(ActionDTO actionDTO, long notificationId) {
+        Optional<Action> optionalAction = actionRepository.findById(actionDTO.getActionId());
+        Optional<Notification> optionalNotification = notificationRepository.findById(notificationId);
+        Optional<AppUser> optionalUser = userRepository.findById(actionDTO.getUser().getUserId());
+
+        if (optionalNotification.isEmpty() ||
+                optionalUser.isEmpty() ||
+                optionalAction.isPresent()) {
+            return false;
+        }
+
+        Notification notification = optionalNotification.get();
+        AppUser user = optionalUser.get();
+
+        if (notification.isActive() && notification.getAction() == null) {
+            Action newAction = new Action();
+            newAction.setTimestamp(new Timestamp(System.currentTimeMillis()));
+            newAction.setMessage(actionDTO.getMessage());
+            newAction.setUser(user);
+            actionRepository.save(newAction);
+            notification.setAction(newAction);
+            notification.setActive(false);
+            notifcationRepository.save(notification);
+            return true;
+        }
+
+        return false;
     }
 
     public List<ActionDTO> getAllActions() {
