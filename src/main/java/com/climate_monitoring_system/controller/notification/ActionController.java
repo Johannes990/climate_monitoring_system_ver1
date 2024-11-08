@@ -34,7 +34,7 @@ public class ActionController {
         return ResponseEntity.ok(actionsByUser);
     }
 
-    @GetMapping("actions/user/[name]")
+    @GetMapping("actions/user/{name}")
     public ResponseEntity<List<ActionDTO>> getActionsByUserName(@PathVariable String name) {
         List<ActionDTO> actionsByUser = actionService.getAllActionsByUserName(name);
         return ResponseEntity.ok(actionsByUser);
