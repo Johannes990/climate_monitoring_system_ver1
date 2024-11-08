@@ -17,20 +17,17 @@ public class ControlParameterSetService {
 
     public ControlParameterSetDTO getControlParameterSetDTOById(long id) {
         Optional<ControlParameterSet> controlParameterSet = controlParameterSetRepository.findById(id);
-
         return checkIfControlParameterSetPresentAndGetDTO(controlParameterSet);
     }
 
     public ControlParameterSet getControlParameterSetById(long id) {
         Optional<ControlParameterSet> controlParameterSet = controlParameterSetRepository.findById(id);
-
         return controlParameterSet.orElseGet(ControlParameterSet::new);
 
     }
 
     public List<ControlParameterSetDTO> getAllControlParameterSetDTOs() {
         List<ControlParameterSet> controlParameterSets = controlParameterSetRepository.findAll();
-
         return controlParametersToControlParameterDTOs(controlParameterSets);
     }
 
@@ -85,7 +82,6 @@ public class ControlParameterSetService {
         controlParameterSetDTO.setTempTolerance(controlParameterSet.getTempTolerance());
         controlParameterSetDTO.setRelHumidityNorm(controlParameterSet.getRelHumidityNorm());
         controlParameterSetDTO.setRelHumidityTolerance(controlParameterSet.getRelHumidityTolerance());
-
         return controlParameterSetDTO;
     }
 }
