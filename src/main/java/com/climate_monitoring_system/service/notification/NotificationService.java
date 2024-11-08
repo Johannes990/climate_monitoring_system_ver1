@@ -23,7 +23,6 @@ public class NotificationService {
 
     public List<NotificationDTO> getAllNotificationDTOs() {
         List<Notification> allNotifications = notificationRepository.findAll();
-
         return notificationsToNotificationDTOs(allNotifications);
     }
 
@@ -32,42 +31,36 @@ public class NotificationService {
     ) {
         List<Notification> allNotificationsByType = notificationRepository
                 .findAllByNotificationType(notificationType);
-
         return notificationsToNotificationDTOs(allNotificationsByType);
     }
 
     public List<NotificationDTO> getAllNotificationDTOsBySensor(Sensor sensor) {
         List<Notification> allNotificationsBySensor = notificationRepository
                 .findAllBySensor(sensor);
-
         return notificationsToNotificationDTOs(allNotificationsBySensor);
     }
 
     public List<NotificationDTO> getAllNotificationDTOsWithActionTaken(boolean actionTaken) {
         List<Notification> allNotificationsWithActionTaken = notificationRepository
                 .findAllByUserActionTaken(actionTaken);
-
         return notificationsToNotificationDTOs(allNotificationsWithActionTaken);
     }
 
     public List<NotificationDTO> getAllNotificationDTOsWithConditionsSelfResolved(boolean selfResolved) {
         List<Notification> allNotificationsWithConditionsSelfResolved = notificationRepository
                 .findAllByConditionsSelfResolved(selfResolved);
-
         return notificationsToNotificationDTOs(allNotificationsWithConditionsSelfResolved);
     }
 
     public List<NotificationDTO> getAllNotificationsDTOsBefore(Timestamp timestamp) {
         List<Notification> allNotificationsBefore = notificationRepository
                 .findAllByTimeStampBefore(timestamp);
-
         return notificationsToNotificationDTOs(allNotificationsBefore);
     }
 
     public List<NotificationDTO> getAllNotificationsDTOsAfter(Timestamp timestamp) {
         List<Notification> allNotificationsAfter = notificationRepository
                 .findAllByTimeStampAfter(timestamp);
-
         return notificationsToNotificationDTOs(allNotificationsAfter);
     }
 
@@ -94,7 +87,6 @@ public class NotificationService {
         notificationDTO.setUserActionTaken(notification.isUserActionTaken());
         notificationDTO.setAction(actionService.actionToActionDTO(notification.getAction()));
         notificationDTO.setActive(notification.isActive());
-
         return notificationDTO;
     }
 }

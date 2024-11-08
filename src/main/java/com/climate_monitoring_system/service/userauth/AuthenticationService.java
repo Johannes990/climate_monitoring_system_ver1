@@ -23,6 +23,7 @@ public class AuthenticationService {
 
     public boolean loginUser(LoginDTO loginDTO) {
         Optional<AppUser> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
+
         if (optionalUser.isEmpty()) {
             throw new EmailNotFoundException(
                     "Email " + loginDTO.getEmail() + " not found"
@@ -30,7 +31,6 @@ public class AuthenticationService {
         }
 
         AppUser user = optionalUser.get();
-
         return passwordService.validatePassword(loginDTO.getPassword(), user.getPasswordHash());
     }
 
@@ -50,7 +50,6 @@ public class AuthenticationService {
         }
 
         Account account = optionalAccount.get();
-
         AppUser newUser = new AppUser();
         newUser.setFirstName(registerDTO.getFirstName());
         newUser.setLastName(registerDTO.getLastName());
@@ -59,7 +58,6 @@ public class AuthenticationService {
         newUser.setPasswordHash(hashedPassword);
         newUser.setAccountId(account);
         userRepository.save(newUser);
-
         return true;
     }
 }

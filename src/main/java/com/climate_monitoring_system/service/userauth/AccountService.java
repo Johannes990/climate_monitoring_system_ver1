@@ -17,13 +17,11 @@ public class AccountService {
 
     public AccountDTO getAccountById(long id) {
         Optional<Account> account = accountRepository.findById(id);
-
         return checkIfAccountPresentAndReturnAccountDTO(account);
     }
 
     public AccountDTO getAccountByAccountType(String accountType) {
         Optional<Account> account = accountRepository.findByAccountType(accountType);
-
         return checkIfAccountPresentAndReturnAccountDTO(account);
     }
 
@@ -40,7 +38,6 @@ public class AccountService {
 
     private AccountDTO checkIfAccountPresentAndReturnAccountDTO(Optional<Account> optionalAccount) {
         return optionalAccount.map(this::getAccountDTO).orElseGet(AccountDTO::new);
-
     }
 
     private AccountDTO getAccountDTO(Account account) {

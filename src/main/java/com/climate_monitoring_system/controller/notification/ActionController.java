@@ -19,21 +19,24 @@ public class ActionController {
     @GetMapping("/actions/{id}")
     public ResponseEntity<ActionDTO> getAction(@PathVariable int id) {
         ActionDTO action = actionService.getActionDTOById(id);
-
         return ResponseEntity.ok(action);
     }
 
     @GetMapping("/actions/all")
     public ResponseEntity<List<ActionDTO>> getAllActions() {
         List<ActionDTO> allActions = actionService.getAllActions();
-
         return ResponseEntity.ok(allActions);
     }
 
     @GetMapping("actions/byuser/{id}")
-    public ResponseEntity<List<ActionDTO>> getActionsByUser(@PathVariable int id) {
-        List<ActionDTO> actionsByUser = actionService.GetAllActionDTOsByUser(id);
+    public ResponseEntity<List<ActionDTO>> getActionsByUserId(@PathVariable int id) {
+        List<ActionDTO> actionsByUser = actionService.getAllActionDTOsByUserId(id);
+        return ResponseEntity.ok(actionsByUser);
+    }
 
+    @GetMapping("actions/user/[name]")
+    public ResponseEntity<List<ActionDTO>> getActionsByUserName(@PathVariable String name) {
+        List<ActionDTO> actionsByUser = actionService.getAllActionsByUserName(name);
         return ResponseEntity.ok(actionsByUser);
     }
 
@@ -41,7 +44,6 @@ public class ActionController {
     public ResponseEntity<List<ActionDTO>> getActionsBefore(@PathVariable Timestamp timestamp) {
         List<ActionDTO> actionsBeforeTimestamp = actionService
                 .getAllActionDTOsBefore(timestamp);
-
         return ResponseEntity.ok(actionsBeforeTimestamp);
     }
 
@@ -49,7 +51,6 @@ public class ActionController {
     public ResponseEntity<List<ActionDTO>> getActionsAfter(@PathVariable Timestamp timestamp) {
         List<ActionDTO> actionsAfterTimestamp = actionService
                 .getAllActionDTOsAfter(timestamp);
-
         return ResponseEntity.ok(actionsAfterTimestamp);
     }
 }

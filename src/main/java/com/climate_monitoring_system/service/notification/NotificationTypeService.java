@@ -17,7 +17,6 @@ public class NotificationTypeService {
 
     public NotificationTypeDTO getNotificationTypeDTOById(long id) {
         Optional<NotificationType> notificationType = notificationTypeRepository.findById(id);
-
         return notificationType.map(this::getNotificationTypeDTO)
                 .orElseGet(NotificationTypeDTO::new);
     }
@@ -41,7 +40,6 @@ public class NotificationTypeService {
         notificationTypeDTO.setNotificationTypeDescription(
                 notificationType.getNotificationTypeDescription()
         );
-
         return notificationTypeDTO;
     }
 

@@ -23,18 +23,28 @@ public class ActionService {
 
     public ActionDTO getActionDTOById(long id) {
         Optional<Action> optionalAction = actionRepository.findById(id);
-
         return optionalAction.map(this::actionToActionDTO).orElseGet(ActionDTO::new);
     }
 
     public List<ActionDTO> getAllActions() {
         List<Action> actions = actionRepository.findAll();
-
         return actionsToActionDTOs(actions);
     }
 
-    public List<ActionDTO> GetAllActionDTOsByUser(long userId) {
+    public List<ActionDTO> getAllActionDTOsByUserId(long userId) {
         Optional<AppUser> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            AppUser user = optionalUser.get();
+            List<Action> userActions = actionRepository.findAllByUser(user);
+            return actionsToActionDTOs(userActions);
+        }
+
+        return new ArrayList<>();
+    }
+
+    public List<ActionDTO> getAllActionsByUserName(String userName) {
+        Optional<AppUser> optionalUser = userRepository.findByUserName(userName);
 
         if (optionalUser.isPresent()) {
             AppUser user = optionalUser.get();
@@ -47,13 +57,11 @@ public class ActionService {
 
     public List<ActionDTO> getAllActionDTOsBefore(Timestamp timestamp) {
         List<Action> actionsBeforeTimestamp = actionRepository.findAllByTimestampBefore(timestamp);
-
         return actionsToActionDTOs(actionsBeforeTimestamp);
     }
 
     public List<ActionDTO> getAllActionDTOsAfter(Timestamp timestamp) {
         List<Action> actionsAfterTimestamp = actionRepository.findAllByTimestampAfter(timestamp);
-
         return actionsToActionDTOs(actionsAfterTimestamp);
     }
 
@@ -72,7 +80,7 @@ public class ActionService {
         actionDTO.setActionId(action.getActionId());
         actionDTO.setTimestamp(action.getTimestamp());
         actionDTO.setMessage(action.getMessage());
-        actionDTO.setUser(appUserService.makeUserDTO(action.getUser()));
+        actionDTO.setUser(appUserService.findByUserId(action.getUser().getUserId()));
         return actionDTO;
     }
 }

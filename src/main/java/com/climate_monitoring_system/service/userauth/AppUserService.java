@@ -20,13 +20,23 @@ public class AppUserService {
     public UserDTO findByUserName(String userName) {
         Optional<AppUser> optionalUser = userRepository.findByUserName(userName);
 
-        if (optionalUser.isEmpty()) {
-            return new UserDTO();
+        if (optionalUser.isPresent()) {
+            AppUser user = optionalUser.get();
+            return makeUserDTO(user);
         }
 
-        AppUser user = optionalUser.get();
+        return new UserDTO();
+    }
 
-        return makeUserDTO(user);
+    public UserDTO findByUserId(long id) {
+        Optional<AppUser> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            AppUser user  = optionalUser.get();
+            return makeUserDTO(user);
+        }
+
+        return new UserDTO();
     }
 
     public List<UserDTO> findAll() {
@@ -45,11 +55,10 @@ public class AppUserService {
         AccountDTO newDTO = new AccountDTO();
         newDTO.setAccountId(account.getAccountId());
         newDTO.setAccountType(account.getAccountType());
-
         return newDTO;
     }
 
-    public UserDTO makeUserDTO(AppUser user) {
+    private UserDTO makeUserDTO(AppUser user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
         userDTO.setFirstName(user.getFirstName());
