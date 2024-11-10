@@ -22,7 +22,6 @@ public class ActionService {
     private final ActionRepository actionRepository;
     private final AppUserService appUserService;
     private final UserRepository userRepository;
-    private final NotificationRepository notifcationRepository;
     private final NotificationRepository notificationRepository;
 
     public ActionDTO getActionDTOById(long id) {
@@ -52,7 +51,7 @@ public class ActionService {
             actionRepository.save(newAction);
             notification.setAction(newAction);
             notification.setActive(false);
-            notifcationRepository.save(notification);
+            notificationRepository.save(notification);
             return true;
         }
 

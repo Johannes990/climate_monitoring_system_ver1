@@ -1,25 +1,47 @@
 package com.climate_monitoring_system.service.notification;
 
+import com.climate_monitoring_system.domain.climatedata.ControlParameterSet;
 import com.climate_monitoring_system.domain.climatedata.Sensor;
+import com.climate_monitoring_system.domain.climatedata.SensorReading;
 import com.climate_monitoring_system.domain.notification.Notification;
 import com.climate_monitoring_system.domain.notification.NotificationType;
 import com.climate_monitoring_system.dto.notification.NotificationDTO;
+import com.climate_monitoring_system.repository.climatedata.SensorReadingRepository;
+import com.climate_monitoring_system.repository.climatedata.SensorRepository;
 import com.climate_monitoring_system.repository.notification.NotificationRepository;
+import com.climate_monitoring_system.repository.notification.NotificationTypeRepository;
 import com.climate_monitoring_system.service.climatedata.SensorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRepository notificationRepository;
+    private final SensorReadingRepository sensorReadingRepository;
     private final SensorService sensorService;
+    private final SensorRepository sensorRepository;
     private final NotificationTypeService notificationTypeService;
+    private final NotificationTypeRepository notificationTypeRepository;
     private final ActionService actionService;
+    private LocalDateTime lastCheckTime = LocalDateTime.now();
+    private HashMap<Integer, FixedDeque> sensorQueues = new HashMap<>();
+    private HashMap<Integer, Integer> sensorNotifications = new HashMap<>();
+    private final int READING_WINDOW = 10;
+    private final int NO_ERROR = 0;
+    private final int OVER_TEMP = 1;
+    private final int UNDER_TEMP = 2;
+    private final int OVER_RH = 3;
+    private final int UNDER_RH = 4;
+
 
     public List<NotificationDTO> getAllNotificationDTOs() {
         List<Notification> allNotifications = notificationRepository.findAll();
@@ -64,6 +86,112 @@ public class NotificationService {
         return notificationsToNotificationDTOs(allNotificationsAfter);
     }
 
+    @Scheduled(fixedRate = 15000)
+    public void checkForNewReadings() {
+        System.out.println("Checking for new readings...");
+        ZonedDateTime lastCheckTimeInUTC = lastCheckTime.atZone(ZoneId.of("UTC")).minusHours(2);
+        System.out.println("New time check: " + lastCheckTimeInUTC);
+        List<Sensor> sensors = sensorRepository.findAll();
+
+        for (Sensor sensor: sensors) {
+            System.out.println("Sensor id: " + sensor.getSensorId());
+            ControlParameterSet controlParams = sensor.getLocation().getControlParameterSet();
+            float maxTemp = controlParams.getTempNorm() + controlParams.getTempTolerance();
+            float minTemp = controlParams.getTempNorm() - controlParams.getTempTolerance();
+            float maxRH = controlParams.getRelHumidityNorm() + controlParams.getRelHumidityTolerance();
+            float minRH = controlParams.getRelHumidityNorm() - controlParams.getRelHumidityTolerance();
+            List<SensorReading> newReadings = sensorReadingRepository
+                    .findAllBySensor(sensor).stream().filter(
+                            reading -> reading.getReadingTime().toLocalDateTime().isAfter(ChronoLocalDateTime.from(lastCheckTimeInUTC))
+                    ).toList();
+            System.out.println("found new readings: " + newReadings);
+
+            for (SensorReading sensorReading: newReadings) {
+                System.out.println("New reading picked up from sensor: " + sensorReading.getSensor());
+                System.out.println("Reading added to deque: " + sensorReading);
+                processNewReading(sensor, sensorReading, maxTemp, minTemp, maxRH, minRH);
+            }
+        }
+
+        lastCheckTime = LocalDateTime.now();
+    }
+
+    private void processNewReading(Sensor sensor, SensorReading newReading,
+                                   float tempMax, float tempMin,
+                                   float relHumidityMax, float relHumidityMin) {
+        int sensorId = (int)sensor.getSensorId();
+        if (sensorId == newReading.getSensor().getSensorId()) {
+            FixedDeque sensorDeque = sensorQueues.computeIfAbsent(sensorId, id -> new FixedDeque(READING_WINDOW));
+            sensorDeque.addValue(newReading);
+            sensorQueues.put(sensorId, sensorDeque);
+
+            if (sensorDeque.isFull()) {
+                boolean overTempMax = sensorDeque.readingsOverTempMax(tempMax);
+                boolean underTempMin = sensorDeque.readingsUnderTempMin(tempMin);
+                boolean overHumidityMax = sensorDeque.readingsOverHumidityMax(relHumidityMax);
+                boolean underHumidityMin = sensorDeque.readingsUnderHumidityMin(relHumidityMin);
+                sensorNotifications.computeIfAbsent(sensorId, _ -> NO_ERROR);
+                int prevNotificationCode = sensorNotifications.get(sensorId);
+
+                if (prevNotificationCode == OVER_TEMP && !overTempMax) {
+                    resolveNotificationConditions(sensor, 1, 3L);
+                }
+                if (prevNotificationCode == UNDER_TEMP && !underTempMin) {
+                    resolveNotificationConditions(sensor, 2, 3L);
+                }
+                if (prevNotificationCode == OVER_RH && !overHumidityMax) {
+                    resolveNotificationConditions(sensor, 4, 6L);
+                }
+                if (prevNotificationCode == UNDER_RH && !underHumidityMin) {
+                    resolveNotificationConditions(sensor, 5, 6L);
+                }
+                if (overTempMax) {
+                    sensorNotifications.put(sensorId, OVER_TEMP);
+                }
+                if (underTempMin) {
+                    sensorNotifications.put(sensorId, UNDER_TEMP);
+                }
+                if (overHumidityMax) {
+                    sensorNotifications.put(sensorId, OVER_RH);
+                }
+                if (underHumidityMin) {
+                    sensorNotifications.put(sensorId, UNDER_RH);
+                }
+            }
+        }
+    }
+
+    private void resolveNotificationConditions(
+            Sensor sensor,
+            int initialNotificationTypeId,
+            long finalNotificationTypeId) {
+        int sensorId = (int) sensor.getSensorId();
+        sensorNotifications.put(sensorId, NO_ERROR);
+        List<Notification> initialNotifications = notificationRepository
+                .findAllBySensorAndIsActive(sensor, true)
+                .stream()
+                .filter(
+                        notification -> notification.getNotificationType()
+                                .getNotificationTypeId() == initialNotificationTypeId
+                ).toList();
+
+        if (!initialNotifications.isEmpty()) {
+            Notification initialNotification = initialNotifications.getFirst();
+            initialNotification.setConditionsSelfResolved(true);
+            notificationRepository.save(initialNotification);
+            notificationRepository.save(getNewResolvedNotification(sensor, finalNotificationTypeId));
+        }
+    }
+
+    private Notification getNewResolvedNotification(Sensor sensor, long notificationTypeId) {
+        Notification newNotification = new Notification();
+        newNotification.setNotificationType(notificationTypeRepository.getReferenceById(notificationTypeId));
+        newNotification.setSensor(sensor);
+        newNotification.setConditionsSelfResolved(true);
+        newNotification.setUserActionTaken(false);
+        return newNotification;
+    }
+
     private List<NotificationDTO> notificationsToNotificationDTOs(
             List<Notification> notifications
     ) {
@@ -88,5 +216,42 @@ public class NotificationService {
         notificationDTO.setAction(actionService.actionToActionDTO(notification.getAction()));
         notificationDTO.setActive(notification.isActive());
         return notificationDTO;
+    }
+}
+
+class FixedDeque {
+    private Deque<SensorReading> readingDeque;
+    private int size;
+
+    public FixedDeque(int size) {
+        this.readingDeque = new ArrayDeque<>();
+        this.size = size;
+    }
+
+    public void addValue(SensorReading reading) {
+        if (readingDeque.size() >= 10) {
+            readingDeque.removeFirst();
+        }
+        readingDeque.addLast(reading);
+    }
+
+    public boolean isFull() {
+        return readingDeque.size() == size;
+    }
+
+    public boolean readingsOverTempMax(float limit) {
+        return readingDeque.stream().allMatch(reading -> reading.getTemperature() > limit);
+    }
+
+    public boolean readingsUnderTempMin(float limit) {
+        return readingDeque.stream().allMatch(reading -> reading.getTemperature() < limit);
+    }
+
+    public boolean readingsOverHumidityMax(float limit) {
+        return readingDeque.stream().allMatch(reading -> reading.getRelHumidity() > limit);
+    }
+
+    public boolean readingsUnderHumidityMin(float limit) {
+        return readingDeque.stream().allMatch(reading -> reading.getRelHumidity() < limit);
     }
 }

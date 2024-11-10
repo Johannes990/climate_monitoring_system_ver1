@@ -11,6 +11,7 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findAllByNotificationType(NotificationType notificationType);
     List<Notification> findAllBySensor(Sensor sensor);
+    List<Notification> findAllBySensorAndIsActive(Sensor sensor, boolean isActive);
     List<Notification> findAllByUserActionTaken(Boolean userActionTaken);
     List<Notification> findAllByConditionsSelfResolved(Boolean selfResolved);
     List<Notification> findAllByTimeStampAfter(Timestamp timeStamp);
