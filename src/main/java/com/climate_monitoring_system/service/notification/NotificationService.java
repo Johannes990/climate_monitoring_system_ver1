@@ -32,6 +32,7 @@ public class NotificationService {
     private final NotificationTypeService notificationTypeService;
     private final NotificationTypeRepository notificationTypeRepository;
     private final ActionService actionService;
+    private LocalDateTime halfHourCheckTime = LocalDateTime.now();
     private LocalDateTime lastCheckTime = LocalDateTime.now();
     private HashMap<Integer, FixedDeque> sensorQueues = new HashMap<>();
     private HashMap<Integer, Integer> sensorNotifications = new HashMap<>();
@@ -39,8 +40,11 @@ public class NotificationService {
     private final int NO_ERROR = 0;
     private final int OVER_TEMP = 1;
     private final int UNDER_TEMP = 2;
-    private final int OVER_RH = 3;
-    private final int UNDER_RH = 4;
+    private final int TEMP_BACK_IN_LIMIT = 3;
+    private final int OVER_RH = 4;
+    private final int UNDER_RH = 5;
+    private final int RH_BACK_IN_LIMIT = 6;
+    private final int NO_SIGNAL = 7;
 
 
     public List<NotificationDTO> getAllNotificationDTOs() {
@@ -88,27 +92,37 @@ public class NotificationService {
 
     @Scheduled(fixedRate = 15000)
     public void checkForNewReadings() {
-        System.out.println("Checking for new readings...");
         ZonedDateTime lastCheckTimeInUTC = lastCheckTime.atZone(ZoneId.of("UTC")).minusHours(2);
-        System.out.println("New time check: " + lastCheckTimeInUTC);
         List<Sensor> sensors = sensorRepository.findAll();
 
         for (Sensor sensor: sensors) {
-            System.out.println("Sensor id: " + sensor.getSensorId());
             ControlParameterSet controlParams = sensor.getLocation().getControlParameterSet();
             float maxTemp = controlParams.getTempNorm() + controlParams.getTempTolerance();
             float minTemp = controlParams.getTempNorm() - controlParams.getTempTolerance();
             float maxRH = controlParams.getRelHumidityNorm() + controlParams.getRelHumidityTolerance();
             float minRH = controlParams.getRelHumidityNorm() - controlParams.getRelHumidityTolerance();
-            List<SensorReading> newReadings = sensorReadingRepository
-                    .findAllBySensor(sensor).stream().filter(
-                            reading -> reading.getReadingTime().toLocalDateTime().isAfter(ChronoLocalDateTime.from(lastCheckTimeInUTC))
-                    ).toList();
-            System.out.println("found new readings: " + newReadings);
+            List<SensorReading> newReadings = sensorReadingRepository.findAllBySensor(sensor);
 
-            for (SensorReading sensorReading: newReadings) {
-                System.out.println("New reading picked up from sensor: " + sensorReading.getSensor());
-                System.out.println("Reading added to deque: " + sensorReading);
+            if (!newReadings.isEmpty()) {
+                halfHourCheckTime = LocalDateTime.now();
+            }
+
+            if (lastCheckTime.minusMinutes(30).isAfter(halfHourCheckTime)) {
+                int prevError = sensorNotifications.get((int) sensor.getSensorId());
+                setSensorNotificationAndSaveInRepository(sensor, NO_SIGNAL, prevError);
+                halfHourCheckTime = lastCheckTime;
+            }
+
+            List<SensorReading> timeFilteredReadings = newReadings
+                    .stream()
+                    .filter(
+                            reading -> reading
+                                    .getReadingTime()
+                                    .toLocalDateTime()
+                                    .isAfter(ChronoLocalDateTime.from(lastCheckTimeInUTC))
+                    ).toList();
+
+            for (SensorReading sensorReading: timeFilteredReadings) {
                 processNewReading(sensor, sensorReading, maxTemp, minTemp, maxRH, minRH);
             }
         }
@@ -134,54 +148,37 @@ public class NotificationService {
                 int prevNotificationCode = sensorNotifications.get(sensorId);
 
                 if (prevNotificationCode == OVER_TEMP && !overTempMax) {
-                    System.out.println("Resolving OVER_TEMP");
-                    resolveNotificationConditions(sensor, 1, 3L);
+                    resolveNotificationConditions(sensor, OVER_TEMP, TEMP_BACK_IN_LIMIT);
                 }
                 if (prevNotificationCode == UNDER_TEMP && !underTempMin) {
-                    System.out.println("Resolving UNDER_TEMP");
-                    resolveNotificationConditions(sensor, 2, 3L);
+                    resolveNotificationConditions(sensor, UNDER_TEMP, TEMP_BACK_IN_LIMIT);
                 }
                 if (prevNotificationCode == OVER_RH && !overHumidityMax) {
-                    System.out.println("Resolving OVER_RH");
-                    resolveNotificationConditions(sensor, 4, 6L);
+                    resolveNotificationConditions(sensor, OVER_RH, RH_BACK_IN_LIMIT);
                 }
                 if (prevNotificationCode == UNDER_RH && !underHumidityMin) {
-                    System.out.println("Resolving UNDER_RH");
-                    resolveNotificationConditions(sensor, 5, 6L);
+                    resolveNotificationConditions(sensor, UNDER_RH, RH_BACK_IN_LIMIT);
                 }
                 if (overTempMax) {
-                    System.out.println("notification OVER_TEMP, sensorID: " + sensorId);
-                    sensorNotifications.put(sensorId, OVER_TEMP);
-                    if (prevNotificationCode != OVER_TEMP) {
-                        notificationRepository
-                                .save(getNewNotification(sensor, 1, false));
-                    }
+                    setSensorNotificationAndSaveInRepository(sensor, OVER_TEMP, prevNotificationCode);
                 }
                 if (underTempMin) {
-                    System.out.println("notification UNDER_TEMP, sensorID: " + sensorId);
-                    sensorNotifications.put(sensorId, UNDER_TEMP);
-                    if (prevNotificationCode != UNDER_TEMP) {
-                        notificationRepository
-                                .save(getNewNotification(sensor, 2, false));
-                    }
+                    setSensorNotificationAndSaveInRepository(sensor, UNDER_TEMP, prevNotificationCode);
                 }
                 if (overHumidityMax) {
-                    System.out.println("notification OVER_RH, sensorID: " + sensorId);
-                    sensorNotifications.put(sensorId, OVER_RH);
-                    if (prevNotificationCode != OVER_RH) {
-                        notificationRepository
-                                .save(getNewNotification(sensor, 4, false));
-                    }
+                    setSensorNotificationAndSaveInRepository(sensor, OVER_RH, prevNotificationCode);
                 }
                 if (underHumidityMin) {
-                    System.out.println("notification UNDER_RH, sensorID: " + sensorId);
-                    sensorNotifications.put(sensorId, UNDER_RH);
-                    if (prevNotificationCode != UNDER_RH) {
-                        notificationRepository
-                                .save(getNewNotification(sensor, 5, false));
-                    }
+                    setSensorNotificationAndSaveInRepository(sensor, UNDER_RH, prevNotificationCode);
                 }
             }
+        }
+    }
+
+    private void setSensorNotificationAndSaveInRepository(Sensor sensor, int errorCode, int prevCode) {
+        sensorNotifications.put((int) sensor.getSensorId(), errorCode);
+        if (prevCode != errorCode) {
+            notificationRepository.save(getNewNotification(sensor, errorCode, false));
         }
     }
 
