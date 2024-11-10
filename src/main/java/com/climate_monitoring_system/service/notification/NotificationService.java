@@ -121,7 +121,7 @@ public class NotificationService {
                                    float relHumidityMax, float relHumidityMin) {
         int sensorId = (int)sensor.getSensorId();
         if (sensorId == newReading.getSensor().getSensorId()) {
-            FixedDeque sensorDeque = sensorQueues.computeIfAbsent(sensorId, id -> new FixedDeque(READING_WINDOW));
+            FixedDeque sensorDeque = sensorQueues.computeIfAbsent(sensorId, _ -> new FixedDeque(READING_WINDOW));
             sensorDeque.addValue(newReading);
             sensorQueues.put(sensorId, sensorDeque);
 
@@ -130,32 +130,56 @@ public class NotificationService {
                 boolean underTempMin = sensorDeque.readingsUnderTempMin(tempMin);
                 boolean overHumidityMax = sensorDeque.readingsOverHumidityMax(relHumidityMax);
                 boolean underHumidityMin = sensorDeque.readingsUnderHumidityMin(relHumidityMin);
-                sensorNotifications.computeIfAbsent(sensorId, _ -> NO_ERROR);
+                sensorNotifications.putIfAbsent(sensorId, NO_ERROR);
                 int prevNotificationCode = sensorNotifications.get(sensorId);
 
                 if (prevNotificationCode == OVER_TEMP && !overTempMax) {
+                    System.out.println("Resolving OVER_TEMP");
                     resolveNotificationConditions(sensor, 1, 3L);
                 }
                 if (prevNotificationCode == UNDER_TEMP && !underTempMin) {
+                    System.out.println("Resolving UNDER_TEMP");
                     resolveNotificationConditions(sensor, 2, 3L);
                 }
                 if (prevNotificationCode == OVER_RH && !overHumidityMax) {
+                    System.out.println("Resolving OVER_RH");
                     resolveNotificationConditions(sensor, 4, 6L);
                 }
                 if (prevNotificationCode == UNDER_RH && !underHumidityMin) {
+                    System.out.println("Resolving UNDER_RH");
                     resolveNotificationConditions(sensor, 5, 6L);
                 }
                 if (overTempMax) {
+                    System.out.println("notification OVER_TEMP, sensorID: " + sensorId);
                     sensorNotifications.put(sensorId, OVER_TEMP);
+                    if (prevNotificationCode != OVER_TEMP) {
+                        notificationRepository
+                                .save(getNewNotification(sensor, 1, false));
+                    }
                 }
                 if (underTempMin) {
+                    System.out.println("notification UNDER_TEMP, sensorID: " + sensorId);
                     sensorNotifications.put(sensorId, UNDER_TEMP);
+                    if (prevNotificationCode != UNDER_TEMP) {
+                        notificationRepository
+                                .save(getNewNotification(sensor, 2, false));
+                    }
                 }
                 if (overHumidityMax) {
+                    System.out.println("notification OVER_RH, sensorID: " + sensorId);
                     sensorNotifications.put(sensorId, OVER_RH);
+                    if (prevNotificationCode != OVER_RH) {
+                        notificationRepository
+                                .save(getNewNotification(sensor, 4, false));
+                    }
                 }
                 if (underHumidityMin) {
+                    System.out.println("notification UNDER_RH, sensorID: " + sensorId);
                     sensorNotifications.put(sensorId, UNDER_RH);
+                    if (prevNotificationCode != UNDER_RH) {
+                        notificationRepository
+                                .save(getNewNotification(sensor, 5, false));
+                    }
                 }
             }
         }
@@ -179,15 +203,15 @@ public class NotificationService {
             Notification initialNotification = initialNotifications.getFirst();
             initialNotification.setConditionsSelfResolved(true);
             notificationRepository.save(initialNotification);
-            notificationRepository.save(getNewResolvedNotification(sensor, finalNotificationTypeId));
+            notificationRepository.save(getNewNotification(sensor, finalNotificationTypeId, true));
         }
     }
 
-    private Notification getNewResolvedNotification(Sensor sensor, long notificationTypeId) {
+    private Notification getNewNotification(Sensor sensor, long notificationTypeId, boolean selfResolved) {
         Notification newNotification = new Notification();
         newNotification.setNotificationType(notificationTypeRepository.getReferenceById(notificationTypeId));
         newNotification.setSensor(sensor);
-        newNotification.setConditionsSelfResolved(true);
+        newNotification.setConditionsSelfResolved(selfResolved);
         newNotification.setUserActionTaken(false);
         return newNotification;
     }
@@ -220,8 +244,8 @@ public class NotificationService {
 }
 
 class FixedDeque {
-    private Deque<SensorReading> readingDeque;
-    private int size;
+    private final Deque<SensorReading> readingDeque;
+    private final int size;
 
     public FixedDeque(int size) {
         this.readingDeque = new ArrayDeque<>();

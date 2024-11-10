@@ -41,6 +41,6 @@ public class Notification {
     @JoinColumn(name = "ActionId", foreignKey = @ForeignKey(name = "FK_Notification_Action"))
     private Action action;
 
-    @Formula("CASE WHEN UserActionTake = 0 AND ConditionsSelfResolved = 0 THEN 1 ELSE 0 END")
+    @Formula("CASE WHEN UserActionTaken = 0 AND ConditionsSelfResolved = 0 THEN 1 ELSE 0 END")
     private boolean isActive;
 }
