@@ -25,6 +25,13 @@ public class NotificationController {
     @GetMapping(NOTIFICATIONS_ALL_QUERY_PATH)
     public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
         List<NotificationDTO> notifications = notificationService.getAllNotificationDTOs();
+        System.out.println("got notifications\n" + notifications);
+        return ResponseEntity.ok(notifications);
+    }
+
+    @GetMapping(NOTIFICATIONS_ACTIVE_QUERY_PATH)
+    public ResponseEntity<List<NotificationDTO>> getActiveNotifications() {
+        List<NotificationDTO> notifications = notificationService.getAllActiveNotificationDTOs();
         return ResponseEntity.ok(notifications);
     }
 

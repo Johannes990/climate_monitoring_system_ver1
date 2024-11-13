@@ -31,7 +31,7 @@ ChartJS.register(
 
 import {Line} from "react-chartjs-2";
 import React, {useCallback, useEffect, useState} from "react";
-import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingsService";
+import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingService";
 import {TempGraphOptions} from "@/app/dashboard/readings/graphOptions/TempGraph";
 import {HumidityGraphOptions} from "@/app/dashboard/readings/graphOptions/HumidityGraph";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
