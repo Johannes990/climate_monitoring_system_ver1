@@ -51,22 +51,18 @@ export const TempGraphOptions = (limitValues: { minTemp: number, maxTemp: number
             },
         },
         scales: {
-            x: [
-                {
+            x: {
                     type: "date",
                     display: true,
                     ticks: {
                         suggestedMin: 0,
                         beginAtZero: true,
                     }
-                },
-            ],
-            y: [
-                {
+            },
+            y: {
                     unit: "c",
                     display: true,
-                },
-            ],
+            },
         },
         layout: {
             padding: {

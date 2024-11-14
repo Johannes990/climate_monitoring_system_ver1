@@ -13,6 +13,7 @@ import {
     BarElement,
     ArcElement,
 } from "chart.js";
+
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
@@ -29,14 +30,11 @@ ChartJS.register(
     annotationPlugin,
 );
 
-import {Line} from "react-chartjs-2";
 import React, {useCallback, useEffect, useState} from "react";
 import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingService";
-import {TempGraphOptions} from "@/app/dashboard/readings/graphOptions/TempGraph";
-import {HumidityGraphOptions} from "@/app/dashboard/readings/graphOptions/HumidityGraph";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
 import {fetchAllSensors} from "@/app/dashboard/sensors/SensorService";
-import {HUMIDITY_READING_COLOR, TEMPERATURE_READING_COLOR} from "@/app/utils/constants";
+import SensorGraph from "@/app/dashboard/components/SensorGraph";
 
 interface SensorData {
     times: Date[],
@@ -48,8 +46,6 @@ export default function Readings() {
     const [sensors, setSensors] = useState<SensorDTO[]>([]);
     const [sensorData, setSensorData] = useState<{ [sensorId: number]: SensorData }>({});
     const [error, setError] = useState<string>("");
-    const graphHeight = "270px";
-    const graphWidth = "500px";
 
     const fetchReadingsForAllSensors = useCallback(async () => {
         try {
@@ -68,7 +64,6 @@ export default function Readings() {
             });
 
             const sensorReadings = await Promise.all(dataPromises);
-
             const sensorDataMap: { [sensorId: number]: SensorData } = sensorReadings.reduce((acc, { sensorId, data }) => {
                 acc[sensorId] = data;
                 return acc;
@@ -102,44 +97,25 @@ export default function Readings() {
 
                     return (
                     <div key={sensor.sensorId} className="mb-8">
-                        <h2 className="text-2xl font-semibold text-center">{sensor.location.locationDescription}</h2>
+
 
                         {sensorData[sensor.sensorId] ? (
-                            <div className="flex flex-col md:flex-row md:space-x-4 items-center justify-center">
-                                <div className="w-full md:w-1/2" style={{ height: graphHeight, width: graphWidth }}>
-                                    <Line
-                                        data={{
-                                            labels: sensorData[sensor.sensorId].times,
-                                            datasets: [{
-                                                label: `${sensor.location.locationDescription} Temperature`,
-                                                data: sensorData[sensor.sensorId].temps,
-                                                backgroundColor: TEMPERATURE_READING_COLOR,
-                                            }]
-                                        }}
-                                        options={TempGraphOptions({
-                                            minTemp: limitValues.minTemp,
-                                            maxTemp: limitValues.maxTemp,
-                                        })}
-                                    />
-                                </div>
-                                <div className="w-full md:w-1/2" style={{ height: graphHeight, width: graphWidth }}>
-                                    <Line
-                                        data={{
-                                            labels: sensorData[sensor.sensorId].times,
-                                            datasets: [{
-                                                label: `${sensor.location.locationDescription} Humidity`,
-                                                data: sensorData[sensor.sensorId].humidities,
-                                                backgroundColor: HUMIDITY_READING_COLOR,
-                                            }]
-                                        }}
-                                        options={HumidityGraphOptions({
-                                            minHumidity: limitValues.minHumidity,
-                                            maxHumidity: limitValues.maxHumidity,
-                                        })}
-                                    />
-                                </div>
-
-                            </div>
+                            <SensorGraph
+                                key={sensor.sensorId}
+                                sensorId={sensor.sensorId}
+                                locationDescription={sensor.location.locationDescription}
+                                times={sensorData[sensor.sensorId].times}
+                                temps={sensorData[sensor.sensorId].temps}
+                                humidities={sensorData[sensor.sensorId].humidities}
+                                tempLimits={{
+                                    mintemp: limitValues.minTemp,
+                                    maxTemp: limitValues.maxTemp,
+                                }}
+                                humidityLimits={{
+                                    minHumidity: limitValues.minHumidity,
+                                    maxHumidity: limitValues.maxHumidity,
+                                }}
+                            />
                         ) : (
                             <p className="text-center">No data available for this sensor.</p>
                         )}
