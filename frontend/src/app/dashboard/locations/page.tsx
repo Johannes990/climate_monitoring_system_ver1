@@ -48,7 +48,7 @@ export default function Locations() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
-            <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded shadow-md">
+            <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Locations</h1>
 
                 {error && <p className="text-red-500">{error}</p>}
