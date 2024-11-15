@@ -3,7 +3,7 @@ import {ActionDTO} from "@/app/dto/notification/ActionDTO";
 import {NotificationTypeDTO} from "@/app/dto/notification/NotificationTypeDTO";
 
 export interface NotificationDTO {
-    notificationId?: number;
+    notificationId: number;
     notificationType: NotificationTypeDTO;
     sensor: SensorDTO;
     timestamp: Date;
