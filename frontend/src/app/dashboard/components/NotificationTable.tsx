@@ -1,11 +1,55 @@
-import React from "react";
+import React, {useState} from "react";
 import {NotificationDTO} from "@/app/dto/notification/NotificationDTO";
+import {LOCAL_STORAGE_DTO_KEY} from "@/app/utils/constants";
+import {ActionDTO} from "@/app/dto/notification/ActionDTO";
+import {postActionForNotification} from "@/app/dashboard/notifications/notificationService";
 
 type NotificationTableProps = {
     notifications: NotificationDTO[];
+    refreshNotifications: () => void;
 };
 
-const NotificationTable: React.FC<NotificationTableProps> = ({ notifications }) => {
+const NotificationTable: React.FC<NotificationTableProps> = ({ notifications, refreshNotifications }) => {
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [selectedNotification, setSelectedNotification] = useState<NotificationDTO | null>(null);
+    const [message, setMessage] = useState("");
+
+    const openPopup = (notification: NotificationDTO) => {
+        setSelectedNotification(notification);
+        setIsPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+        setMessage("");
+        setSelectedNotification(null);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedNotification) {
+            try {
+                const userDTOString = localStorage.getItem(LOCAL_STORAGE_DTO_KEY);
+                let userDTO;
+
+                if (userDTOString) {
+                    userDTO = JSON.parse(userDTOString);
+                    const data: ActionDTO = {
+                        message: message,
+                        user: userDTO,
+                    };
+                    const notificationId = selectedNotification.notificationId;
+                    await postActionForNotification(data, notificationId);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+
+            closePopup();
+            refreshNotifications();
+        }
+    };
+
     return (
         <div className="overflow-x-auto w-full">
             <table className="min-w-full bg-white border">
@@ -17,15 +61,16 @@ const NotificationTable: React.FC<NotificationTableProps> = ({ notifications }) 
                     <th className="px-3 py-2 border">Time generated</th>
                     <th className="px-3 py-2 border">Conditions resolved</th>
                     <th className="px-3 py-2 border">Action taken</th>
+                    <th className="px-3 py-2 border">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 {notifications.map((notification) => (
                     <tr key={notification.notificationId}>
-                        <th className="px-3 py-2 border">{notification.notificationId}</th>
-                        <th className="px-3 py-2 border">{notification.notificationType.notificationTypeDescription}</th>
-                        <th className="px-3 py-2 border">{notification.sensor.sensorId}</th>
-                        <th className="px-3 py-2 border">
+                        <td className="px-3 py-2 border">{notification.notificationId}</td>
+                        <td className="px-3 py-2 border">{notification.notificationType.notificationTypeDescription}</td>
+                        <td className="px-3 py-2 border">{notification.sensor.sensorId}</td>
+                        <td className="px-3 py-2 border">
                             {notification.timestamp.toLocaleDateString('en-GB', {
                                 day: '2-digit',
                                 month: 'long',
@@ -36,13 +81,55 @@ const NotificationTable: React.FC<NotificationTableProps> = ({ notifications }) 
                             second: '2-digit',
                             hour12: false
                         })}
-                        </th>
-                        <th className="px-3 py-2 border">{notification.conditionsSelfResolved ? "conditions self-resolved" : "conditions did not self-resolve"}</th>
-                        <th className="px-3 py-2 border">{notification.userActionTaken ? "user action taken" : "user action not taken"}</th>
+                        </td>
+                        <td className="px-3 py-2 border">{notification.conditionsSelfResolved ? "conditions self-resolved" : "conditions did not self-resolve"}</td>
+                        <td className="px-3 py-2 border">{notification.userActionTaken ? "user action taken" : "user action not taken"}</td>
+                        <td className="px-3 py-2 border">
+                            {!notification.conditionsSelfResolved && !notification.userActionTaken && (
+                                <button
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => openPopup(notification)}
+                                >
+                                    Take Action
+                                </button>
+                            )}
+                        </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+
+            {isPopupOpen && selectedNotification && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded shadow-md w-96">
+                        <h2 className="text-xl font-bold mb-4">Take Action on Notification #{selectedNotification.notificationId}</h2>
+                        <form onSubmit={handleSubmit}>
+                            <textarea
+                                className="w-full p-2 border rounded mb-4"
+                                placeholder="Enter message..."
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                required
+                            ></textarea>
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 bg-gray-300 rounded mr-2 hover:bg-gray-400"
+                                    onClick={closePopup}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

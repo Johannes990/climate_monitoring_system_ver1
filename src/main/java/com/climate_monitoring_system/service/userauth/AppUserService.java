@@ -51,6 +51,18 @@ public class AppUserService {
         return userDTOs;
     }
 
+    public UserDTO findByEmail(String email) {
+        Optional<AppUser> optionalUser = userRepository.findByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            AppUser user = optionalUser.get();
+            System.out.println("found user " + user + " with email " + email);
+            return makeUserDTO(user);
+        }
+
+        return new UserDTO();
+    }
+
     private AccountDTO getAccountDTO(Account account) {
         AccountDTO newDTO = new AccountDTO();
         newDTO.setAccountId(account.getAccountId());

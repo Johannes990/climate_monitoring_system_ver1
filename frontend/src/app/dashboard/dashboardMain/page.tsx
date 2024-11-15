@@ -8,26 +8,32 @@ import {
     PROTECTED_QUERY_PATH,
 } from "@/app/utils/constants";
 import {NotificationDTO} from "@/app/dto/notification/NotificationDTO";
-import {fetchActiveNotifications} from "@/app/dashboard/notifications/notificationService";
+import {fetchActiveNotifications, fetchAllActions} from "@/app/dashboard/notifications/notificationService";
 import NotificationTable from "@/app/dashboard/components/NotificationTable";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
 import {SensorData} from "@/app/dashboard/readings/SensorData";
 import {fetchAllSensors} from "@/app/dashboard/sensors/SensorService";
 import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingService";
 import SensorGraph from "@/app/dashboard/components/SensorGraph";
+import {ActionDTO} from "@/app/dto/notification/ActionDTO";
+import ActionTable from "@/app/dashboard/components/ActionTable";
 
 export default function Dashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [firstName, setFirstName] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [activeNotifications, setActiveNotifications] = useState<NotificationDTO[]>([]);
     const [sensors, setSensors] = useState<SensorDTO[]>([]);
     const [sensorData, setSensorData] = useState<{ [sensorId: number]: SensorData }>({});
+    const [actions, setActions] = useState<ActionDTO[]>([]);
     const router = useRouter();
 
     const fetchData = useCallback(async () => {
         try {
             const activeNotifications = await fetchActiveNotifications(true);
+            const allActions = await fetchAllActions();
             setActiveNotifications(activeNotifications);
+            setActions(allActions);
         } catch (err) {
             setErrorMessage("Failed to fetch all notifications");
             console.error(err);
@@ -64,6 +70,9 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
+        const storedFirstName = localStorage.getItem("firstName");
+        setFirstName(storedFirstName);
+
         window.history.replaceState(null, "", window.location.href);
         const checkAuthentication = async () => {
             try {
@@ -97,6 +106,10 @@ export default function Dashboard() {
         fetchReadingsForAllSensors();
     }, [fetchData, fetchReadingsForAllSensors]);
 
+    const refreshNotifications = async () => {
+        await fetchData();
+    }
+
     if (errorMessage) {
         return (
             <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
@@ -122,10 +135,13 @@ export default function Dashboard() {
         <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
             <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded shadow-md">
                 <h1 className="text-3xl font-bold text-center">Dashboard</h1>
-                <p className="text-center">Welcome to your dashboard!</p>
+                <p className="text-center">Welcome to your dashboard, {firstName}!</p>
 
                 <h1 className="text-3xl font-bold text-center">Active Notifications</h1>
                 <NotificationTable notifications={activeNotifications}/>
+
+                <h1 className="text-3xl font-bold text-center">All Actions</h1>
+                <ActionTable actions={actions}/>
 
                 <h1 className="text-3xl font-bold text-center">Sensor Readings</h1>
                 {sensors.map(sensor => {
