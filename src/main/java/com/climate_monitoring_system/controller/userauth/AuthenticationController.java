@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.climate_monitoring_system.controller.Paths.*;
 
@@ -27,14 +29,23 @@ public class AuthenticationController {
     private final AppUserService appUserService;
 
     @PostMapping(LOGIN_QUERY_PATH)
-    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         if (authenticationService.loginUser(loginDTO)) {
             HttpSession session = request.getSession(true);
+            String userEmail = loginDTO.getEmail();
             session.setAttribute("user", loginDTO.getEmail());
-            return ResponseEntity.ok("Login Successful!");
+            UserDTO user = appUserService.findByEmail(userEmail);
+            String userId = String.valueOf(user.getUserId());
+            String firstName = user.getFirstName();
+            String lastName = user.getLastName();
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("userId", userId);
+            responseBody.put("firstName", firstName);
+            responseBody.put("lastName", lastName);
+            responseBody.put("user", user);
+            return ResponseEntity.ok(responseBody);
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password!");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid username or password!"));
     }
 
     @GetMapping(LOGOUT_QUERY_PATH)

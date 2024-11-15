@@ -50,7 +50,7 @@ public class ActionService {
             newAction.setUser(user);
             actionRepository.save(newAction);
             notification.setAction(newAction);
-            notification.setActive(false);
+            notification.setUserActionTaken(true);
             notificationRepository.save(notification);
             return true;
         }

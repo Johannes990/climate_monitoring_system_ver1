@@ -7,7 +7,11 @@ import { postRequest } from "@/app/utils/api";
 import {
     DASHBOARD_URL_PATH,
     REGISTER_URL_PATH,
-    LOGIN_QUERY_PATH
+    LOGIN_QUERY_PATH,
+    LOCAL_STORAGE_USERID_KEY,
+    LOCAL_STORAGE_DTO_KEY,
+    LOCAL_STORAGE_FIRST_NAME_KEY,
+    LOCAL_STORAGE_LAST_NAME_KEY
 } from "@/app/utils/constants";
 
 export default function Login() {
@@ -34,11 +38,14 @@ export default function Login() {
             const response = await postRequest(LOGIN_QUERY_PATH, loginFormData);
 
             if (response.ok) {
-                const responseBody = await response.text();
-                console.log("Login successful:", responseBody);
+                const responseBody = await response.json();
+                localStorage.setItem(LOCAL_STORAGE_USERID_KEY, responseBody.userId);
+                localStorage.setItem(LOCAL_STORAGE_FIRST_NAME_KEY, responseBody.firstName);
+                localStorage.setItem(LOCAL_STORAGE_LAST_NAME_KEY, responseBody.lastName);
+                localStorage.setItem(LOCAL_STORAGE_DTO_KEY, JSON.stringify(responseBody.user));
                 router.push(DASHBOARD_URL_PATH);
             } else {
-                const errorBody = await response.text();
+                const errorBody = await response.json();
                 setErrorMessage(errorBody);
             }
         } catch (error) {

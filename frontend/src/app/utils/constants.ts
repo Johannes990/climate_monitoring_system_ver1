@@ -74,3 +74,9 @@ export const TEMPERATURE_READING_COLOR = "#101010";
 export const HUMIDITY_READING_COLOR = "#00AB9C";
 export const TEMPERATURE_LIMIT_COLOR = "#FF0000";
 export const HUMIDITY_LIMIT_COLOR = "#FF0000"
+
+// localStorage keys
+export const LOCAL_STORAGE_DTO_KEY = "dto";
+export const LOCAL_STORAGE_USERID_KEY = "userId";
+export const LOCAL_STORAGE_FIRST_NAME_KEY = "firstName";
+export const LOCAL_STORAGE_LAST_NAME_KEY = "lastName";
