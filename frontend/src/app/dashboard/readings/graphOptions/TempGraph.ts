@@ -52,7 +52,6 @@ export const TempGraphOptions = (limitValues: { minTemp: number, maxTemp: number
         },
         scales: {
             x: {
-                    type: "date",
                     display: true,
                     ticks: {
                         suggestedMin: 0,

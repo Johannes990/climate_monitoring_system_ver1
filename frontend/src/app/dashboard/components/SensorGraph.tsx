@@ -1,3 +1,33 @@
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LineElement,
+    LinearScale,
+    PointElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+    BarElement,
+    ArcElement,
+} from "chart.js";
+
+import annotationPlugin from 'chartjs-plugin-annotation';
+
+ChartJS.register(
+    CategoryScale,
+    LineElement,
+    LinearScale,
+    PointElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+    BarElement,
+    ArcElement,
+    annotationPlugin,
+);
+
 import {Line} from "react-chartjs-2";
 import {HUMIDITY_READING_COLOR, TEMPERATURE_READING_COLOR} from "@/app/utils/constants";
 import {TempGraphOptions} from "@/app/dashboard/readings/graphOptions/TempGraph";

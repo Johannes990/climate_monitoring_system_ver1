@@ -1,35 +1,5 @@
 "use client";
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler,
-    BarElement,
-    ArcElement,
-} from "chart.js";
-
-import annotationPlugin from 'chartjs-plugin-annotation';
-
-ChartJS.register(
-    CategoryScale,
-    LineElement,
-    LinearScale,
-    PointElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler,
-    BarElement,
-    ArcElement,
-    annotationPlugin,
-);
-
 import React, {useCallback, useEffect, useState} from "react";
 import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingService";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
@@ -55,7 +25,7 @@ export default function Readings() {
             const dataPromises = sensors.map(async (sensor) => {
                 const readings = await fetchReadingsBySensorId(sensor.sensorId);
                 const sensorData: SensorData = {
-                    times: readings.map(reading => reading.readingTime),
+                    times: readings.map(reading => new Date(reading.readingTime).toDateString()),
                     temps: readings.map(reading => reading.temperature),
                     humidities: readings.map(reading => reading.relHumidity),
                 };
