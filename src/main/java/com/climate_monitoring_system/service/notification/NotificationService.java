@@ -52,6 +52,12 @@ public class NotificationService {
         return notificationsToNotificationDTOs(allNotifications);
     }
 
+    public List<NotificationDTO> getAllActiveNotificationDTOs() {
+        List<Notification> allActiveNotifications = notificationRepository
+                .findAllByUserActionTakenAndConditionsSelfResolved(false, false);
+        return notificationsToNotificationDTOs(allActiveNotifications);
+    }
+
     public List<NotificationDTO> getAllNotificationDTOsByNotificationType(
             NotificationType notificationType
     ) {
@@ -234,7 +240,10 @@ public class NotificationService {
         notificationDTO.setTimestamp(notification.getTimeStamp());
         notificationDTO.setConditionsSelfResolved(notification.isConditionsSelfResolved());
         notificationDTO.setUserActionTaken(notification.isUserActionTaken());
-        notificationDTO.setAction(actionService.actionToActionDTO(notification.getAction()));
+        notificationDTO.setAction(null);
+        if (notification.getAction() != null) {
+            notificationDTO.setAction(actionService.actionToActionDTO(notification.getAction()));
+        }
         notificationDTO.setActive(notification.isActive());
         return notificationDTO;
     }

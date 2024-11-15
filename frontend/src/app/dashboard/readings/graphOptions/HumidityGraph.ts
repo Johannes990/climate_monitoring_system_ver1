@@ -51,22 +51,21 @@ export const HumidityGraphOptions = (limitValues: { minHumidity: number, maxHumi
             },
         },
         scales: {
-            x: [
+            x:
                 {
-                    type: "date",
-                    display: false,
+                    display: true,
                     ticks: {
                         suggestedMin: 0,
                         beginAtZero: true,
                     }
                 },
-            ],
-            y: [
+
+            y:
                 {
                     unit: "percent",
-                    display: false,
+                    display: true,
                 },
-            ],
+
         },
         layout: {
             padding: {
