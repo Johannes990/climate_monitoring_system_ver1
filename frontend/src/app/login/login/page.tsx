@@ -45,7 +45,6 @@ export default function Login() {
             setErrorMessage("An error occurred during login. Please check your credentials.");
             console.error("Login error:", error);
         }
-        //setErrorMessage("");
     };
 
     return (

@@ -5,12 +5,8 @@ import {fetchReadingsBySensorId} from "@/app/dashboard/readings/ReadingService";
 import {SensorDTO} from "@/app/dto/climatedata/SensorDTO";
 import {fetchAllSensors} from "@/app/dashboard/sensors/SensorService";
 import SensorGraph from "@/app/dashboard/components/SensorGraph";
+import {SensorData} from "@/app/dashboard/readings/SensorData";
 
-interface SensorData {
-    times: Date[],
-    temps: number[],
-    humidities: number[],
-}
 
 export default function Readings() {
     const [sensors, setSensors] = useState<SensorDTO[]>([]);
